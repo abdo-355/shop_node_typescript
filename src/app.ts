@@ -1,12 +1,14 @@
 import path from "path";
-
 import express, { RequestHandler } from "express";
 import bodyParser from "body-parser";
 
-const app = express();
-
 import * as adminData from "./routes/admin";
 import shopRoutes from "./routes/shop";
+
+const app = express();
+
+app.set("view engine", "pug");
+app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "..", "public")));
