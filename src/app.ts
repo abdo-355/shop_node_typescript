@@ -17,7 +17,7 @@ app.use("/admin", adminData.router);
 app.use(shopRoutes);
 
 app.use<RequestHandler>((req, res, next) => {
-  res.status(404).sendFile(path.join(__dirname, "..", "views", "404.html"));
+  res.status(404).render("404", { docTitle: "An Error occurred" });
 });
 
 app.listen(3000);
