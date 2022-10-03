@@ -13,7 +13,10 @@ interface Product {
 const products: Product[] = [];
 // /admin/add-product => GET
 router.get<RequestHandler>("/add-product", (req, res, next) => {
-  res.render("add-product", { docTitle: "Add Product" });
+  res.render("add-product", {
+    pageTitle: "Add Product",
+    path: "/admin/add-product",
+  });
 });
 
 // /admin/add-product => POST

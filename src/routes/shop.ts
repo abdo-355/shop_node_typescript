@@ -8,7 +8,7 @@ import rootDir from "../util/path";
 const router = express.Router();
 
 router.get<RequestHandler>("/", (req, res, next) => {
-  res.render("shop", { prods: products, docTitle: "shop" });
+  res.render("shop", { prods: products, pageTitle: "Shop", path: "/" });
   // res.sendFile(path.join(rootDir, "..", "views", "shop.html"));
 });
 
