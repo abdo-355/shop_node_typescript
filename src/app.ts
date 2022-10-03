@@ -7,7 +7,7 @@ import shopRoutes from "./routes/shop";
 
 const app = express();
 
-app.set("view engine", "pug");
+app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -17,7 +17,7 @@ app.use("/admin", adminData.router);
 app.use(shopRoutes);
 
 app.use<RequestHandler>((req, res, next) => {
-  res.status(404).render("404", { docTitle: "An Error occurred" });
+  res.status(404).render("404", { pageTitle: "An Error occurred" });
 });
 
 app.listen(3000);
