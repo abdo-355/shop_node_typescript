@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
+import get404controller from "./controllers/404";
 
 const app = express();
 
@@ -16,8 +17,6 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
-app.use<RequestHandler>((req, res, next) => {
-  res.status(404).render("404", { pageTitle: "An Error occurred" });
-});
+app.use(get404controller);
 
 app.listen(3000);
