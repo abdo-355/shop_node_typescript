@@ -2,7 +2,7 @@ import path from "path";
 import express, { RequestHandler } from "express";
 import bodyParser from "body-parser";
 
-import * as adminData from "./routes/admin";
+import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 
 const app = express();
@@ -13,7 +13,7 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-app.use("/admin", adminData.router);
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 app.use<RequestHandler>((req, res, next) => {

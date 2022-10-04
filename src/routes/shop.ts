@@ -1,5 +1,5 @@
 import path from "path";
-import { products } from "./admin";
+import { getProducts } from "../controllers/products";
 
 import express, { RequestHandler } from "express";
 
@@ -7,9 +7,6 @@ import rootDir from "../util/path";
 
 const router = express.Router();
 
-router.get<RequestHandler>("/", (req, res, next) => {
-  res.render("shop", { prods: products, pageTitle: "Shop", path: "/" });
-  // res.sendFile(path.join(rootDir, "..", "views", "shop.html"));
-});
+router.get("/", getProducts);
 
 export default router;
