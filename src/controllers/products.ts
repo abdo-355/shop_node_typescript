@@ -1,10 +1,6 @@
 import { RequestHandler } from "express";
 
-interface Product {
-  title: string;
-}
-
-export const products: Product[] = [];
+import Product from "../models/product";
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render("add-product", {
@@ -14,10 +10,12 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 };
 
 export const postAddProduct: RequestHandler = (req, res, next) => {
-  products.push({ title: req.body.title });
+  const product = new Product((req.body as { title: string }).title);
+  product.save();
   res.redirect("/");
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
+  const products = Product.fetchAll();
   res.render("shop", { prods: products, pageTitle: "Shop", path: "/" });
 };
