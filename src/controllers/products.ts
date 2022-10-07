@@ -16,6 +16,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  const products = Product.fetchAll();
-  res.render("shop", { prods: products, pageTitle: "Shop", path: "/" });
+  Product.fetchAll((products: Product[]) => {
+    res.render("shop", { prods: products, pageTitle: "Shop", path: "/" });
+  });
 };

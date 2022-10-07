@@ -26,12 +26,12 @@ class Product {
     });
   };
 
-  public static fetchAll = () => {
+  public static fetchAll = (cb: Function) => {
     fs.readFile(p, (err, data) => {
       if (err) {
-        return [];
+        cb([]);
       }
-      return JSON.parse(data.toString());
+      cb(JSON.parse(data.toString()));
     });
   };
 }
