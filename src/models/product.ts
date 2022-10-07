@@ -1,24 +1,29 @@
-import { json } from "body-parser";
 import fs from "fs";
 import path from "path";
 
 import rootPath from "../util/path";
 
-const p = path.join(rootPath, "data", "products.json");
+const p = path.join(rootPath, "fileContent", "products.json");
+
+const getProductsFromFile = (cb: Function) => {
+  fs.readFile(p, (err, fileContent) => {
+    if (err) {
+      cb([]);
+    } else {
+      cb(JSON.parse(fileContent.toString()));
+    }
+  });
+};
 
 class Product {
   private title: string;
 
-  constructor(title: string) {
-    this.title = title;
+  constructor(t: string) {
+    this.title = t;
   }
 
   public save = () => {
-    fs.readFile(p, (err, fileContent) => {
-      let products: Product[] = [];
-      if (!err) {
-        products = JSON.parse(fileContent.toString());
-      }
+    getProductsFromFile((products: Product[]) => {
       products.push(this);
       fs.writeFile(p, JSON.stringify(products), (err) => {
         if (err) throw err;
@@ -27,12 +32,7 @@ class Product {
   };
 
   public static fetchAll = (cb: Function) => {
-    fs.readFile(p, (err, data) => {
-      if (err) {
-        cb([]);
-      }
-      cb(JSON.parse(data.toString()));
-    });
+    getProductsFromFile(cb);
   };
 }
 
