@@ -3,7 +3,7 @@ import path from "path";
 
 import rootPath from "../util/path";
 
-const p = path.join(rootPath, "fileContent", "products.json");
+const p = path.join(rootPath, "data", "products.json");
 
 const getProductsFromFile = (cb: Function) => {
   fs.readFile(p, (err, fileContent) => {
