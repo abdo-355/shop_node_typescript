@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
-import path from "path";
 
+import path from "path";
 import Product from "../models/product";
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
@@ -18,10 +18,10 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.fetchAll((products: Product[]) => {
-    res.render(path.join("shop", "product-list"), {
+    res.render(path.join("admin", "products"), {
       prods: products,
-      pageTitle: "Shop",
-      path: "/",
+      pageTitle: "Admin products  ",
+      path: "/admin/products",
     });
   });
 };

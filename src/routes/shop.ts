@@ -1,12 +1,15 @@
-import path from "path";
-import { getProducts } from "../controllers/products";
+import * as shopController from "../controllers/shop";
 
-import express, { RequestHandler } from "express";
-
-import rootDir from "../util/path";
+import express from "express";
 
 const router = express.Router();
 
-router.get("/", getProducts);
+router.get("/", shopController.getIndex);
+
+router.get("/products", shopController.getProducts);
+
+router.get("/cart", shopController.getCart);
+
+router.get("/checkout", shopController.getCheckout);
 
 export default router;
