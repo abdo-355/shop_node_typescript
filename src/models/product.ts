@@ -20,6 +20,7 @@ class Product {
   private imgUrl: string;
   private description: string;
   private price: number;
+  private id: string;
 
   constructor(
     title: string,
@@ -31,6 +32,7 @@ class Product {
     this.imgUrl = imgUrl;
     this.description = description;
     this.price = price;
+    this.id = Math.random().toString();
   }
 
   public save = () => {
