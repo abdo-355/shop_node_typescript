@@ -14,8 +14,14 @@ export const getProducts: RequestHandler = (req, res, next) => {
 };
 
 export const getProduct: RequestHandler = (req, res, next) => {
-  const prodId = req.params.productId;
-  res.redirect("/");
+  const prodId = req.params.productId as string;
+  Product.findProductById(prodId, (product: Product) => {
+    res.render(path.join("shop", "product-detail"), {
+      product: product,
+      pageTitle: product.title,
+      path: "/products",
+    });
+  });
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {

@@ -16,11 +16,11 @@ const getProductsFromFile = (cb: Function) => {
 };
 
 class Product {
-  private title: string;
-  private imgUrl: string;
-  private description: string;
-  private price: number;
-  private id: string;
+  title: string;
+  imgUrl: string;
+  description: string;
+  price: number;
+  id: string;
 
   constructor(
     title: string,
@@ -46,6 +46,13 @@ class Product {
 
   public static fetchAll = (cb: Function) => {
     getProductsFromFile(cb);
+  };
+
+  public static findProductById = (id: string, cb: Function) => {
+    getProductsFromFile((products: Product[]) => {
+      const product = products.find((p) => p.id === id);
+      cb(product);
+    });
   };
 }
 
