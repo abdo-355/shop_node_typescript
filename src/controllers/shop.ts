@@ -13,6 +13,11 @@ export const getProducts: RequestHandler = (req, res, next) => {
   });
 };
 
+export const getProduct: RequestHandler = (req, res, next) => {
+  const prodId = req.params.productId;
+  res.redirect("/");
+};
+
 export const getIndex: RequestHandler = (req, res, next) => {
   Product.fetchAll((products: Product[]) => {
     res.render(path.join("shop", "index"), {
