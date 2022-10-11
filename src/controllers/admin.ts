@@ -3,8 +3,18 @@ import { RequestHandler } from "express";
 import path from "path";
 import Product from "../models/product";
 
+export const getProducts: RequestHandler = (req, res, next) => {
+  Product.fetchAll((products: Product[]) => {
+    res.render(path.join("admin", "products"), {
+      prods: products,
+      pageTitle: "Admin products  ",
+      path: "/admin/products",
+    });
+  });
+};
+
 export const getAddProduct: RequestHandler = (req, res, next) => {
-  res.render(path.join("admin", "add-product"), {
+  res.render(path.join("admin", "edit-product"), {
     pageTitle: "Add Product",
     path: "/admin/add-product",
   });
@@ -18,12 +28,11 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   res.redirect("/");
 };
 
-export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll((products: Product[]) => {
-    res.render(path.join("admin", "products"), {
-      prods: products,
-      pageTitle: "Admin products  ",
-      path: "/admin/products",
-    });
+export const getEditProduct: RequestHandler = (req, res, next) => {
+  const editMode = req.query.editMode;
+  res.render(path.join("admin", "edit-product"), {
+    pageTitle: "Edit Product",
+    path: "/admin/edit-product",
+    editMode,
   });
 };
