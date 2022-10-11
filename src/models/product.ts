@@ -19,14 +19,14 @@ class Product {
   title: string;
   imgUrl: string;
   description: string;
-  price: number;
+  price: string;
   id: string;
 
   constructor(
     title: string,
     imgUrl: string,
     description: string,
-    price: number
+    price: string
   ) {
     this.title = title;
     this.imgUrl = imgUrl;
@@ -50,7 +50,10 @@ class Product {
 
   public static findProductById = (id: string, cb: Function) => {
     getProductsFromFile((products: Product[]) => {
-      const product = products.find((p) => p.id === id);
+      const product = products.find((p) => {
+        // console.log(p.id.length, id.trim().length);
+        return p.id === id;
+      });
       cb(product);
     });
   };

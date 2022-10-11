@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import path from "path";
 
 import Product from "../models/product";
+import Cart from "../models/cart";
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.fetchAll((products: Product[]) => {
@@ -43,7 +44,9 @@ export const getCart: RequestHandler = (req, res, next) => {
 
 export const postCart: RequestHandler = (req, res, next) => {
   const prodId = req.body.productId;
-  console.log(prodId);
+  Product.findProductById(prodId, (product: Product) => {
+    Cart.addProduct(prodId, product.price);
+  });
   res.redirect("/cart");
 };
 
