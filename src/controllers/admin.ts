@@ -17,7 +17,7 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render(path.join("admin", "edit-product"), {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    editing: "false",
+    editMode: "false",
   });
 };
 
@@ -30,8 +30,8 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getEditProduct: RequestHandler = (req, res, next) => {
-  const editing = req.query.edit;
-  if (editing !== "true") {
+  const editMode = req.query.edit;
+  if (editMode !== "true") {
     return res.redirect("/");
   }
   const productId = req.params.productId;
@@ -42,7 +42,7 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     res.render(path.join("admin", "edit-product"), {
       pageTitle: "Edit Product",
       path: "/admin/edit-product",
-      editing,
+      editMode,
       product,
     });
   });
