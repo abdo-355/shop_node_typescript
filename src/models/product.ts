@@ -37,7 +37,7 @@ class Product {
     this.price = price;
   }
 
-  public save = () => {
+  save = () => {
     getProductsFromFile((products: Product[]) => {
       if (this.id) {
         // update the product if we provide an id
@@ -60,11 +60,11 @@ class Product {
     });
   };
 
-  public static fetchAll = (cb: Function) => {
+  static fetchAll = (cb: Function) => {
     getProductsFromFile(cb);
   };
 
-  public static findProductById = (id: string, cb: Function) => {
+  static findProductById = (id: string, cb: Function) => {
     getProductsFromFile((products: Product[]) => {
       const product = products.find((p) => {
         return p.id === id;
@@ -73,7 +73,7 @@ class Product {
     });
   };
 
-  public static deleteProduct = (id: string) => {
+  static deleteProduct = (id: string) => {
     getProductsFromFile((products: Product[]) => {
       const product = products.find((prod) => prod.id === id);
       const updatedProducts = products.filter((product) => product.id !== id);

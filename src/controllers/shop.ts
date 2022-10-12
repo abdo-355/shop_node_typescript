@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import path from "path";
 
 import Product from "../models/product";
-import Cart from "../models/cart";
+import Cart, { CartObject } from "../models/cart";
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.fetchAll((products: Product[]) => {
@@ -35,10 +35,29 @@ export const getIndex: RequestHandler = (req, res, next) => {
   });
 };
 
+interface shownCartProducts extends Product {
+  quantity: number;
+}
+
 export const getCart: RequestHandler = (req, res, next) => {
-  res.render(path.join("shop", "cart"), {
-    path: "/cart",
-    pageTitle: "Your Cart",
+  Cart.getCart((cart: CartObject) => {
+    Product.fetchAll((products: Product[]) => {
+      const cartProducts: shownCartProducts[] = [];
+      for (let product of products) {
+        const cartProductData = cart.products.find(
+          (prod) => prod.id === product.id
+        );
+        if (cartProductData) {
+          cartProducts.push({ ...product, quantity: cartProductData.quantity });
+        }
+      }
+
+      res.render(path.join("shop", "cart"), {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: cartProducts,
+      });
+    });
   });
 };
 

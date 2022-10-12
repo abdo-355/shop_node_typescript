@@ -11,13 +11,13 @@ interface CartProduct {
   quantity: number;
 }
 
-interface CartObject {
+export interface CartObject {
   products: CartProduct[];
   totalPrice: number;
 }
 
 class Cart {
-  public static addProduct = (id: string, price: string) => {
+  static addProduct = (id: string, price: string) => {
     // fetch the previous cart
     fs.readFile(p, (err, fileContent) => {
       let cart: CartObject = { products: [], totalPrice: 0 };
@@ -54,7 +54,7 @@ class Cart {
     });
   };
 
-  public static deleteProductById = (id: string, productPrice: number) => {
+  static deleteProductById = (id: string, productPrice: number) => {
     fs.readFile(p, (err, fileContent) => {
       if (err) {
         return;
@@ -74,6 +74,17 @@ class Cart {
           console.log(err);
         }
       });
+    });
+  };
+
+  static getCart = (cb: Function) => {
+    fs.readFile(p, (err, fileContent) => {
+      const cart = JSON.parse(fileContent.toString());
+      if (err) {
+        cb(null);
+      } else {
+        cb(cart);
+      }
     });
   };
 }
