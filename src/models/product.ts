@@ -2,6 +2,7 @@ import fs, { rmSync } from "fs";
 import path from "path";
 
 import rootPath from "../util/path";
+import Cart from "./cart";
 
 const p = path.join(rootPath, "data", "products.json");
 
@@ -74,11 +75,11 @@ class Product {
 
   public static deleteProduct = (id: string) => {
     getProductsFromFile((products: Product[]) => {
+      const product = products.find((prod) => prod.id === id);
       const updatedProducts = products.filter((product) => product.id !== id);
-      console.log(updatedProducts);
       fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
         if (!err) {
-          //TODO: also remove from the cart
+          Cart.deleteProductById(id, +product!.price);
         }
       });
     });

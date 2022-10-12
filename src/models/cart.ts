@@ -47,7 +47,32 @@ class Cart {
       cart.totalPrice += +price;
 
       fs.writeFile(p, JSON.stringify(cart), (err) => {
-        console.log(err);
+        if (err) {
+          console.log(err);
+        }
+      });
+    });
+  };
+
+  public static deleteProductById = (id: string, productPrice: number) => {
+    fs.readFile(p, (err, fileContent) => {
+      if (err) {
+        return;
+      }
+      const cart: CartObject = JSON.parse(fileContent.toString());
+      const updatedCart = { ...cart };
+      const product = updatedCart.products.find((product) => product.id === id);
+      const productQty = product!.quantity;
+
+      updatedCart.products = updatedCart.products.filter(
+        (prod) => prod.id !== id
+      );
+      updatedCart.totalPrice -= productPrice * productQty;
+
+      fs.writeFile(p, JSON.stringify(updatedCart), (err) => {
+        if (err) {
+          console.log(err);
+        }
       });
     });
   };
