@@ -51,7 +51,6 @@ class Product {
   public static findProductById = (id: string, cb: Function) => {
     getProductsFromFile((products: Product[]) => {
       const product = products.find((p) => {
-        // console.log(p.id.length, id.trim().length);
         return p.id === id;
       });
       cb(product);
