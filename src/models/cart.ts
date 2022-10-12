@@ -62,6 +62,9 @@ class Cart {
       const cart: CartObject = JSON.parse(fileContent.toString());
       const updatedCart = { ...cart };
       const product = updatedCart.products.find((product) => product.id === id);
+      if (!product) {
+        return;
+      }
       const productQty = product!.quantity;
 
       updatedCart.products = updatedCart.products.filter(

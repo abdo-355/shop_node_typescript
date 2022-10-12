@@ -47,14 +47,18 @@ class Product {
         const updatedProducts = [...products];
         updatedProducts[existingProductindex] = this;
         fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
-          console.log(err);
+          if (err) {
+            console.log(err);
+          }
         });
       } else {
         // add a new product if we don't provide an id
         this.id = Math.random().toString();
         products.push(this);
         fs.writeFile(p, JSON.stringify(products), (err) => {
-          console.log(err);
+          if (err) {
+            console.log(err);
+          }
         });
       }
     });
