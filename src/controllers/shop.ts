@@ -69,6 +69,14 @@ export const postCart: RequestHandler = (req, res, next) => {
   res.redirect("/cart");
 };
 
+export const postDeleteItem: RequestHandler = (req, res, next) => {
+  const productId = req.body.productId;
+  Product.findProductById(productId, (product: Product) => {
+    Cart.deleteProductById(productId, product.price);
+    res.redirect("/cart");
+  });
+};
+
 export const getOrders: RequestHandler = (req, res, next) => {
   res.render("shop/orders", {
     path: "/orders",

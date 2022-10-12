@@ -79,7 +79,7 @@ class Product {
       const updatedProducts = products.filter((product) => product.id !== id);
       fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
         if (!err) {
-          Cart.deleteProductById(id, +product!.price);
+          Cart.deleteProductById(id, product!.price);
         }
       });
     });

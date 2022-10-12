@@ -54,7 +54,7 @@ class Cart {
     });
   };
 
-  static deleteProductById = (id: string, productPrice: number) => {
+  static deleteProductById = (id: string, productPrice: string) => {
     fs.readFile(p, (err, fileContent) => {
       if (err) {
         return;
@@ -67,7 +67,7 @@ class Cart {
       updatedCart.products = updatedCart.products.filter(
         (prod) => prod.id !== id
       );
-      updatedCart.totalPrice -= productPrice * productQty;
+      updatedCart.totalPrice -= +productPrice * productQty;
 
       fs.writeFile(p, JSON.stringify(updatedCart), (err) => {
         if (err) {
