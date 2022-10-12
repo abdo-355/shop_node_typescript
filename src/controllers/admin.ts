@@ -29,10 +29,21 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getEditProduct: RequestHandler = (req, res, next) => {
-  const editMode = req.query.editMode;
-  res.render(path.join("admin", "edit-product"), {
-    pageTitle: "Edit Product",
-    path: "/admin/edit-product",
-    editMode,
+  const editing = req.query.editMode;
+  if (editing !== "true") {
+    console.log("excuted");
+    return res.redirect("/");
+  }
+  const productId = req.params.productId;
+  Product.findProductById(productId, (product: Product) => {
+    if (product) {
+      return res.redirect("/");
+    }
+    res.render(path.join("admin", "edit-product"), {
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+      editing,
+      product,
+    });
   });
 };
