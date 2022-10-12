@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs, { rmSync } from "fs";
 import path from "path";
 
 import rootPath from "../util/path";
@@ -69,6 +69,18 @@ class Product {
         return p.id === id;
       });
       cb(product);
+    });
+  };
+
+  public static deleteProduct = (id: string) => {
+    getProductsFromFile((products: Product[]) => {
+      const updatedProducts = products.filter((product) => product.id !== id);
+      console.log(updatedProducts);
+      fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+        if (!err) {
+          //TODO: also remove from the cart
+        }
+      });
     });
   };
 }
