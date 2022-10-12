@@ -15,8 +15,8 @@ export const getProducts: RequestHandler = (req, res, next) => {
 };
 
 export const getProduct: RequestHandler = (req, res, next) => {
-  const prodId = req.params.productId as string;
-  Product.findProductById(prodId, (product: Product) => {
+  const productId = req.params.productId as string;
+  Product.findProductById(productId, (product: Product) => {
     res.render(path.join("shop", "product-detail"), {
       product: product,
       pageTitle: product.title,
@@ -43,9 +43,9 @@ export const getCart: RequestHandler = (req, res, next) => {
 };
 
 export const postCart: RequestHandler = (req, res, next) => {
-  const prodId = req.body.productId;
-  Product.findProductById(prodId, (product: Product) => {
-    Cart.addProduct(prodId, product.price);
+  const productId = req.body.productId;
+  Product.findProductById(productId, (product: Product) => {
+    Cart.addProduct(productId, product.price);
   });
   res.redirect("/cart");
 };

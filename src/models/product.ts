@@ -20,27 +20,42 @@ class Product {
   imgUrl: string;
   description: string;
   price: string;
-  id: string;
+  id: string | null;
 
   constructor(
+    id: string | null,
     title: string,
     imgUrl: string,
     description: string,
     price: string
   ) {
+    this.id = id;
     this.title = title;
     this.imgUrl = imgUrl;
     this.description = description;
     this.price = price;
-    this.id = Math.random().toString();
   }
 
   public save = () => {
     getProductsFromFile((products: Product[]) => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), (err) => {
-        if (err) throw err;
-      });
+      if (this.id) {
+        // update the product if we provide an id
+        const existingProductindex = products.findIndex(
+          (product: Product) => product.id === this.id
+        );
+        const updatedProducts = [...products];
+        updatedProducts[existingProductindex] = this;
+        fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+          console.log(err);
+        });
+      } else {
+        // add a new product if we don't provide an id
+        this.id = Math.random().toString();
+        products.push(this);
+        fs.writeFile(p, JSON.stringify(products), (err) => {
+          console.log(err);
+        });
+      }
     });
   };
 

@@ -24,7 +24,7 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const { title, imgUrl, description, price } = req.body;
 
-  const product = new Product(title, imgUrl, description, price);
+  const product = new Product(null, title, imgUrl, description, price);
   product.save();
   res.redirect("/");
 };
@@ -46,4 +46,23 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
       product,
     });
   });
+};
+
+export const postEditProduct: RequestHandler = (req, res, next) => {
+  const productId = req.body.id;
+  const updatedTitle = req.body.title;
+  const updatedDescription = req.body.description;
+  const updatedImg = req.body.imgUrl;
+  const updatedPrice = req.body.price;
+
+  const updatedProduct = new Product(
+    productId,
+    updatedTitle,
+    updatedImg,
+    updatedDescription,
+    updatedPrice
+  );
+
+  updatedProduct.save();
+  res.redirect("/admin/products");
 };
