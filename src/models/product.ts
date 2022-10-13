@@ -29,7 +29,9 @@ class Product {
     return db.execute("SELECT * FROM products");
   };
 
-  static findProductById = (id: string) => {};
+  static findProductById = (id: string) => {
+    return db.execute("SELECT * FROM products WHERE products.id = ?", [id]);
+  };
 
   static deleteProduct = (id: string) => {};
 }

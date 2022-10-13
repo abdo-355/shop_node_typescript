@@ -3,6 +3,7 @@ import path from "path";
 
 import Product from "../models/product";
 import Cart, { CartObject } from "../models/cart";
+import { title } from "process";
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.fetchAll()
@@ -22,10 +23,10 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const getProduct: RequestHandler = (req, res, next) => {
   const productId = req.params.productId as string;
-  Product.findProductById(productId, (product: Product) => {
+  Product.findProductById(productId).then(([product]) => {
     res.render(path.join("shop", "product-detail"), {
-      product: product,
-      pageTitle: product.title,
+      product: product[0],
+      pageTitle: product[0].title,
       path: "/products",
     });
   });
@@ -75,18 +76,30 @@ export const getCart: RequestHandler = (req, res, next) => {
 
 export const postCart: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
-  Product.findProductById(productId, (product: Product) => {
-    Cart.addProduct(productId, product.price);
-  });
+  Product.findProductById(productId)
+    .then(([product]) => {
+      Cart.addProduct(productId, product[0].price);
+    })
+    .catch((err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
   res.redirect("/cart");
 };
 
 export const postDeleteItem: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
-  Product.findProductById(productId, (product: Product) => {
-    Cart.deleteProductById(productId, product.price);
-    res.redirect("/cart");
-  });
+  Product.findProductById(productId)
+    .then(([product]) => {
+      Cart.deleteProductById(productId, product[0].price);
+      res.redirect("/cart");
+    })
+    .catch((err) => {
+      if (err) {
+        console.log(err);
+      }
+    });
 };
 
 export const getOrders: RequestHandler = (req, res, next) => {

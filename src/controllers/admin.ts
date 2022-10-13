@@ -41,15 +41,15 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     return res.redirect("/");
   }
   const productId = req.params.productId;
-  Product.findProductById(productId, (product: Product) => {
-    if (!product) {
+  Product.findProductById(productId).then(([product]) => {
+    if (!product[0]) {
       return res.redirect("/");
     }
     res.render(path.join("admin", "edit-product"), {
       pageTitle: "Edit Product",
       path: "/admin/edit-product",
       editMode,
-      product,
+      product: product[0],
     });
   });
 };
