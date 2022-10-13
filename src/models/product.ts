@@ -1,3 +1,5 @@
+import db from "../util/database";
+
 import Cart from "./cart";
 
 class Product {
@@ -23,9 +25,11 @@ class Product {
 
   save = () => {};
 
-  static fetchAll = (cb: Function) => {};
+  static fetchAll = () => {
+    return db.execute("SELECT * FROM products");
+  };
 
-  static findProductById = (id: string, cb: Function) => {};
+  static findProductById = (id: string) => {};
 
   static deleteProduct = (id: string) => {};
 }

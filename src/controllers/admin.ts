@@ -4,13 +4,19 @@ import path from "path";
 import Product from "../models/product";
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll((products: Product[]) => {
-    res.render(path.join("admin", "products"), {
-      prods: products,
-      pageTitle: "Admin products  ",
-      path: "/admin/products",
+  Product.fetchAll()
+    .then(([products, fieldData]) => {
+      res.render(path.join("admin", "products"), {
+        prods: products,
+        pageTitle: "Admin products  ",
+        path: "/admin/products",
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        console.log(err);
+      }
     });
-  });
 };
 
 export const getAddProduct: RequestHandler = (req, res, next) => {

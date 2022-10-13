@@ -5,13 +5,19 @@ import Product from "../models/product";
 import Cart, { CartObject } from "../models/cart";
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll((products: Product[]) => {
-    res.render(path.join("shop", "product-list"), {
-      prods: products,
-      pageTitle: "all products",
-      path: "/products",
+  Product.fetchAll()
+    .then(([products, fieldData]) => {
+      res.render(path.join("shop", "product-list"), {
+        prods: products,
+        pageTitle: "all products",
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        console.log(err);
+      }
     });
-  });
 };
 
 export const getProduct: RequestHandler = (req, res, next) => {
@@ -26,13 +32,19 @@ export const getProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
-  Product.fetchAll((products: Product[]) => {
-    res.render(path.join("shop", "index"), {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
+  Product.fetchAll()
+    .then(([products, fieldData]) => {
+      res.render(path.join("shop", "index"), {
+        prods: products,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch((err) => {
+      if (err) {
+        console.log(err);
+      }
     });
-  });
 };
 
 interface shownCartProducts extends Product {
