@@ -5,7 +5,6 @@ import bodyParser from "body-parser";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import get404controller from "./controllers/404";
-import db from "./util/database";
 
 const app = express();
 
