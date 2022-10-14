@@ -23,7 +23,12 @@ class Product {
     this.price = price;
   }
 
-  save = () => {};
+  save = () => {
+    return db.execute(
+      "INSERT INTO products (title, imgUrl, description, price) VALUES (?, ?, ?, ?)",
+      [this.title, this.imgUrl, this.description, this.price]
+    );
+  };
 
   static fetchAll = () => {
     return db.execute("SELECT * FROM products");
