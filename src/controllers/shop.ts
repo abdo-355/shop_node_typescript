@@ -6,8 +6,8 @@ import Cart, { CartObject } from "../models/cart";
 import { title } from "process";
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll()
-    .then(([products, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render(path.join("shop", "product-list"), {
         prods: products,
         pageTitle: "all products",
@@ -33,8 +33,8 @@ export const getProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
-  Product.fetchAll()
-    .then(([products, fieldData]) => {
+  Product.findAll()
+    .then((products) => {
       res.render(path.join("shop", "index"), {
         prods: products,
         pageTitle: "Shop",
