@@ -20,6 +20,12 @@ app.use(shopRoutes);
 
 app.use(get404controller);
 
-sequelize.sync();
+sequelize
+  .sync()
+  .then((res) => {
+    // console.log(res);
 
-app.listen(3000);
+    // only listen if the connection succeded
+    app.listen(3000);
+  })
+  .catch((err) => console.log(err));
