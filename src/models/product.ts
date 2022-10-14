@@ -2,7 +2,7 @@ import { DOUBLE, INTEGER, STRING } from "sequelize";
 
 import sequelize from "../util/database";
 
-const Product = sequelize.define("products", {
+const Product = sequelize.define("product", {
   id: {
     type: INTEGER,
     autoIncrement: true,
