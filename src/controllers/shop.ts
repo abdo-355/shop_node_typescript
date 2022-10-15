@@ -23,10 +23,10 @@ export const getProducts: RequestHandler = (req, res, next) => {
 
 export const getProduct: RequestHandler = (req, res, next) => {
   const productId = req.params.productId as string;
-  Product.findProductById(productId).then(([product]) => {
+  Product.findByPk(productId).then((product) => {
     res.render(path.join("shop", "product-detail"), {
-      product: product[0],
-      pageTitle: product[0].title,
+      product: product,
+      pageTitle: product.title,
       path: "/products",
     });
   });
