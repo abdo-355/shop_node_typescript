@@ -1,7 +1,7 @@
 import { Table, Column, Model, DataType } from "sequelize-typescript";
 
 @Table
-class Cart extends Model {
+class CartItem extends Model {
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
@@ -9,6 +9,9 @@ class Cart extends Model {
     primaryKey: true,
   })
   id: number;
+
+  @Column(DataType.INTEGER)
+  quantity: number;
 }
 
-export default Cart;
+export default CartItem;

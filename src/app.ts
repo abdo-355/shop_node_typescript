@@ -1,6 +1,7 @@
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
+import { Model } from "sequelize-typescript";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -8,8 +9,8 @@ import get404controller from "./controllers/404";
 import sequelize from "./util/database";
 import Product from "./models/product";
 import User from "./models/user";
-import { Sequelize } from "sequelize";
-import { Model } from "sequelize-typescript";
+import Cart from "./models/cart";
+import CartItem from "./models/cart-item";
 
 const app = express();
 
@@ -44,11 +45,19 @@ app.use(shopRoutes);
 
 app.use(get404controller);
 
+// associations area
 Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
 
+Cart.belongsTo(User);
+User.hasOne(Cart);
+
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
+
 sequelize
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then((res) => {
     return User.findByPk(1);
   })
