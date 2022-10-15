@@ -1,30 +1,39 @@
-import { DOUBLE, INTEGER, STRING } from "sequelize";
+import { Table, Column, Model, DataType } from "sequelize-typescript";
 
-import sequelize from "../util/database";
+const { INTEGER, STRING, DOUBLE } = DataType;
 
-const Product = sequelize.define("product", {
-  id: {
+@Table
+class Product extends Model {
+  @Column({
     type: INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
-  },
-  title: {
+  })
+  id: number;
+
+  @Column({
     type: STRING,
     allowNull: false,
-  },
-  price: {
+  })
+  title: string;
+
+  @Column({
+    type: STRING,
+  })
+  description: string;
+
+  @Column({
+    type: STRING,
+    allowNull: false,
+  })
+  imgurl: string;
+
+  @Column({
     type: DOUBLE,
     allowNull: false,
-  },
-  imgUrl: {
-    type: STRING,
-    allowNull: false,
-  },
-  description: {
-    type: STRING,
-    allowNull: false,
-  },
-});
+  })
+  price: number;
+}
 
 export default Product;
