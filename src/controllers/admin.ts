@@ -24,16 +24,17 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 };
 
 export const postAddProduct: RequestHandler = (req, res, next) => {
-  const { title, imgUrl, description, price } = req.body;
+  const { title, imgurl, description, price } = req.body;
 
   Product.create({
     title,
-    imgUrl,
+    imgurl,
     description,
     price,
   })
     .then((result) => {
       console.log("product added");
+      res.redirect("/");
     })
     .catch((err) => console.log(err));
 };
@@ -63,7 +64,6 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
   const updatedDescription = req.body.description;
   const updatedImg = req.body.imgurl;
   const updatedPrice = req.body.price;
-
   Product.findByPk(productId)
     .then((product) => {
       product.title = updatedTitle;
@@ -81,6 +81,13 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
 
 export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
-  Product.deleteProduct(productId);
-  res.redirect("/admin/products");
+  Product.findByPk(productId)
+    .then((product) => {
+      return product.destroy();
+    })
+    .then((result) => {
+      console.log("produc deleted");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
 };
