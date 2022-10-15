@@ -17,6 +17,21 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
+interface UserRequest extends express.Request {
+  user: User;
+}
+
+app.use(
+  (req: UserRequest, res: express.Response, next: express.NextFunction) => {
+    User.findByPk(1)
+      .then((user) => {
+        req.user = user;
+        next();
+      })
+      .catch((err) => console.log(err));
+  }
+);
+
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
