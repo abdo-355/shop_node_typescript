@@ -4,7 +4,8 @@ import path from "path";
 import Product from "../models/product";
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.findAll()
+  req.user
+    .getProducts()
     .then((products) => {
       res.render(path.join("admin", "products"), {
         prods: products,
@@ -26,13 +27,13 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const { title, imgurl, description, price } = req.body;
 
-  Product.create({
-    title,
-    imgurl,
-    description,
-    price,
-    userId: req.user.id,
-  })
+  req.user
+    .createProduct({
+      title,
+      imgurl,
+      description,
+      price,
+    })
     .then((result) => {
       console.log("product added");
       res.redirect("/");

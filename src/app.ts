@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 declare global {
   namespace Express {
     interface Request extends Model {
-      user?: User;
+      user?: any;
     }
   }
 }
