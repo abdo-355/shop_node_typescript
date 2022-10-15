@@ -31,6 +31,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
     imgurl,
     description,
     price,
+    userId: req.user.id,
   })
     .then((result) => {
       console.log("product added");

@@ -34,6 +34,12 @@ class Product extends Model {
     allowNull: false,
   })
   price: number;
+
+  @Column({
+    type: INTEGER,
+    allowNull: false,
+  })
+  userId: number;
 }
 
 export default Product;

@@ -8,6 +8,8 @@ import get404controller from "./controllers/404";
 import sequelize from "./util/database";
 import Product from "./models/product";
 import User from "./models/user";
+import { Sequelize } from "sequelize";
+import { Model } from "sequelize-typescript";
 
 const app = express();
 
@@ -17,12 +19,17 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-interface UserRequest extends express.Request {
-  user: User;
+// add user to the request globaly
+declare global {
+  namespace Express {
+    interface Request extends Model {
+      user?: User;
+    }
+  }
 }
 
 app.use(
-  (req: UserRequest, res: express.Response, next: express.NextFunction) => {
+  (req: express.Request, res: express.Response, next: express.NextFunction) => {
     User.findByPk(1)
       .then((user) => {
         req.user = user;
