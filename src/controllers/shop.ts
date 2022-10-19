@@ -2,8 +2,7 @@ import { RequestHandler } from "express";
 import path from "path";
 
 import Product from "../models/product";
-import Cart, { CartObject } from "../models/cart";
-import { title } from "process";
+import Cart from "../models/cart";
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.findAll()
@@ -53,34 +52,17 @@ interface shownCartProducts extends Product {
 }
 
 export const getCart: RequestHandler = (req, res, next) => {
-  Cart.getCart((cart: CartObject) => {
-    Product.fetchAll()
-      .then(([products]) => {
-        const cartProducts: shownCartProducts[] = [];
-        for (let i = 0; i < (products as Product[]).length; i++) {
-          const cartProductData = cart.products.find(
-            (prod) => prod.id === products[i].id
-          );
-          if (cartProductData) {
-            cartProducts.push({
-              ...products[i],
-              quantity: cartProductData.quantity,
-            });
-          }
-        }
-
-        res.render(path.join("shop", "cart"), {
-          path: "/cart",
-          pageTitle: "Your Cart",
-          products: cartProducts,
-        });
-      })
-      .catch((err) => {
-        if (err) {
-          console.log(err);
-        }
+  req.user
+    .getCart()
+    .then((cart) => cart.getProducts())
+    .then((products) => {
+      res.render(path.join("shop", "cart"), {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: products,
       });
-  });
+    })
+    .catch((err) => console.log(err));
 };
 
 export const postCart: RequestHandler = (req, res, next) => {
