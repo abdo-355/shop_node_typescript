@@ -56,6 +56,7 @@ export const getCart: RequestHandler = (req, res, next) => {
     .getCart()
     .then((cart) => cart.getProducts())
     .then((products) => {
+      console.log(products);
       res.render(path.join("shop", "cart"), {
         path: "/cart",
         pageTitle: "Your Cart",

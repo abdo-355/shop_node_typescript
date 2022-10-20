@@ -75,7 +75,6 @@ sequelize
     return user.createCart();
   })
   .then((cart) => {
-    console.log(cart);
     // only listen if the connection succeded
     app.listen(3000);
   })
