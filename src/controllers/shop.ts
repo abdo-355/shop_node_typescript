@@ -98,16 +98,20 @@ export const postCart: RequestHandler = (req, res, next) => {
 
 export const postDeleteItem: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
-  Product.findByPk(productId)
-    .then((product) => {
-      Cart.deleteProductById(productId, product[0].price);
+
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts({ where: { id: productId } });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.cartItem.destroy();
+    })
+    .then((result) => {
       res.redirect("/cart");
     })
-    .catch((err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
+    .catch((err) => console.log(err));
 };
 
 export const getOrders: RequestHandler = (req, res, next) => {

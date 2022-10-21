@@ -10,6 +10,7 @@ import {
 
 import User from "./user";
 import sequelize from "../util/database";
+import CartItem from "./cart-item";
 
 class Product extends Model<
   InferAttributes<Product>,
@@ -26,6 +27,8 @@ class Product extends Model<
 
   declare userId: ForeignKey<User["id"]>;
   declare user?: NonAttribute<User>;
+
+  declare cartItem?: NonAttribute<CartItem>;
 }
 
 Product.init(

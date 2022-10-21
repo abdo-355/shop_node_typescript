@@ -45,6 +45,7 @@ app.use(shopRoutes);
 
 app.use(get404controller);
 
+// association area
 Product.belongsTo(User, {
   constraints: true,
   onDelete: "CASCADE",
