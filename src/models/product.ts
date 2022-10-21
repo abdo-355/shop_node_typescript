@@ -3,7 +3,10 @@ import {
   InferAttributes,
   InferCreationAttributes,
   CreationOptional,
+  ForeignKey,
 } from "sequelize";
+
+import User from "./user";
 
 class Product extends Model<
   InferAttributes<Product>,
@@ -17,6 +20,8 @@ class Product extends Model<
 
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare userId: ForeignKey<User["id"]>;
 }
 
 export default Product;
