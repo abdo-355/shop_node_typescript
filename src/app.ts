@@ -45,18 +45,22 @@ app.use(shopRoutes);
 
 app.use(get404controller);
 
-// associations area
-User.hasMany(Product);
-
-User.hasOne(Cart);
-
-Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
+Product.belongsTo(User, {
+  constraints: true,
+  onDelete: "CASCADE",
+  foreignKey: "userId",
+});
+User.hasMany(Product, { foreignKey: "userId" });
+User.hasOne(Cart, { foreignKey: "userId" });
+Cart.belongsTo(User, { foreignKey: "userId" });
+Cart.belongsToMany(Product, { through: CartItem, foreignKey: "cartId" });
+Product.belongsToMany(Cart, { through: CartItem, foreignKey: "cartId" });
 
 sequelize
-  // .sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then((res) => {
+    console.log(User.findByPk(1));
     return User.findByPk(1);
   })
   .then((user) => {
@@ -69,7 +73,7 @@ sequelize
 
     return user;
   })
-  .then((user: any) => {
+  .then((user) => {
     return user.createCart();
   })
   .then((cart) => {

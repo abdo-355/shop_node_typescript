@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const sequelize = new Sequelize(
-  "node_w/_typescript",
+  "node_w/_sql",
   "root",
   process.env.DB_PASSWORD,
   {

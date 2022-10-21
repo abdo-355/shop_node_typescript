@@ -7,6 +7,7 @@ import {
   HasManyGetAssociationsMixin,
   HasManyCreateAssociationMixin,
   HasOneGetAssociationMixin,
+  HasOneCreateAssociationMixin,
 } from "sequelize";
 
 import sequelize from "../util/database";
@@ -25,6 +26,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare createProduct: HasManyCreateAssociationMixin<Product>;
 
   declare getCart: HasOneGetAssociationMixin<Cart>;
+  declare createCart: HasOneCreateAssociationMixin<Cart>;
 }
 
 User.init(
