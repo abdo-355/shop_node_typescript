@@ -4,10 +4,13 @@ import {
   InferCreationAttributes,
   CreationOptional,
   ForeignKey,
+  DataTypes,
 } from "sequelize";
 
 import Product from "./product";
 import Cart from "./cart";
+
+import sequelize from "../util/database";
 
 class CartItem extends Model<
   InferAttributes<CartItem>,
@@ -20,8 +23,27 @@ class CartItem extends Model<
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
-  declare CartId: ForeignKey<Cart["id"]>;
-  declare ProductId: ForeignKey<Product["id"]>;
+  declare cartId: ForeignKey<Cart["id"]>;
+  declare productId: ForeignKey<Product["id"]>;
 }
+
+CartItem.init(
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      allowNull: false,
+      primaryKey: true,
+    },
+    quantity: DataTypes.INTEGER,
+    createdAt: DataTypes.DATE,
+    updatedAt: DataTypes.DATE,
+    cartId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  { sequelize, tableName: "cartitems" }
+);
 
 export default CartItem;
