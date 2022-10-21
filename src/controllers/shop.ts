@@ -25,7 +25,7 @@ export const getProduct: RequestHandler = (req, res, next) => {
   Product.findByPk(productId).then((product) => {
     res.render(path.join("shop", "product-detail"), {
       product: product,
-      pageTitle: product.title,
+      pageTitle: product!.title,
       path: "/products",
     });
   });
@@ -48,8 +48,8 @@ export const getIndex: RequestHandler = (req, res, next) => {
 };
 
 export const getCart: RequestHandler = (req, res, next) => {
-  req.user
-    .getCart()
+  req
+    .user!.getCart()
     .then((cart) => cart.getProducts())
     .then((products) => {
       res.render(path.join("shop", "cart"), {
@@ -63,11 +63,11 @@ export const getCart: RequestHandler = (req, res, next) => {
 
 export const postCart: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
-  let fetchedCart;
+  let fetchedCart: Cart;
   let newQuantity = 1;
 
-  req.user
-    .getCart()
+  req
+    .user!.getCart()
     .then((cart) => {
       fetchedCart = cart;
       return cart.getProducts({ where: { id: productId } });
@@ -79,16 +79,18 @@ export const postCart: RequestHandler = (req, res, next) => {
       }
 
       if (product) {
-        const oldQuantity = product.CartItem.quantity;
+        const oldQuantity = product.cartItem!.quantity;
         newQuantity += oldQuantity;
         return product;
       }
       return Product.findByPk(productId);
     })
     .then((product) => {
-      return fetchedCart.addProduct(product, {
-        through: { quantity: newQuantity },
-      });
+      if (product) {
+        return fetchedCart.addProduct(product, {
+          through: { quantity: newQuantity },
+        });
+      }
     })
     .then(() => {
       res.redirect("/cart");
@@ -99,14 +101,14 @@ export const postCart: RequestHandler = (req, res, next) => {
 export const postDeleteItem: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
 
-  req.user
-    .getCart()
+  req
+    .user!.getCart()
     .then((cart) => {
       return cart.getProducts({ where: { id: productId } });
     })
     .then((products) => {
       const product = products[0];
-      return product.cartItem.destroy();
+      return product.cartItem!.destroy();
     })
     .then((result) => {
       res.redirect("/cart");

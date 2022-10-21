@@ -7,6 +7,7 @@ import {
   NonAttribute,
   DataTypes,
   BelongsToManyGetAssociationsMixin,
+  BelongsToManyAddAssociationMixin,
 } from "sequelize";
 
 import User from "./user";
@@ -23,6 +24,7 @@ class Cart extends Model<InferAttributes<Cart>, InferCreationAttributes<Cart>> {
   declare user?: NonAttribute<User>;
 
   declare getProducts: BelongsToManyGetAssociationsMixin<Product>;
+  declare addProduct: BelongsToManyAddAssociationMixin<Product, number>;
 }
 
 Cart.init(

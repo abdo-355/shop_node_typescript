@@ -4,8 +4,8 @@ import path from "path";
 import Product from "../models/product";
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  req.user
-    .getProducts()
+  req
+    .user!.getProducts()
     .then((products) => {
       res.render(path.join("admin", "products"), {
         prods: products,
@@ -27,8 +27,8 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const { title, imgurl, description, price } = req.body;
 
-  req.user
-    .createProduct({ title, imgurl, description, price })
+  req
+    .user!.createProduct({ title, imgurl, description, price })
     .then((result) => {
       console.log("product added");
       res.redirect("/");
@@ -63,6 +63,9 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
   const updatedPrice = req.body.price;
   Product.findByPk(productId)
     .then((product) => {
+      if (!product) {
+        return;
+      }
       product.title = updatedTitle;
       product.description = updatedDescription;
       product.price = updatedPrice;
@@ -80,7 +83,7 @@ export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
   Product.findByPk(productId)
     .then((product) => {
-      return product.destroy();
+      return product!.destroy();
     })
     .then((result) => {
       console.log("produc deleted");
