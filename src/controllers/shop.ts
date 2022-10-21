@@ -47,10 +47,6 @@ export const getIndex: RequestHandler = (req, res, next) => {
     });
 };
 
-interface shownCartProducts extends Product {
-  quantity: number;
-}
-
 export const getCart: RequestHandler = (req, res, next) => {
   req.user
     .getCart()
@@ -102,8 +98,8 @@ export const postCart: RequestHandler = (req, res, next) => {
 
 export const postDeleteItem: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
-  Product.findProductById(productId)
-    .then(([product]) => {
+  Product.findByPk(productId)
+    .then((product) => {
       Cart.deleteProductById(productId, product[0].price);
       res.redirect("/cart");
     })

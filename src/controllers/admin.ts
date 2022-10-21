@@ -28,12 +28,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
   const { title, imgurl, description, price } = req.body;
 
   req.user
-    .createProduct({
-      title,
-      imgurl,
-      description,
-      price,
-    })
+    .createProduct({ title, imgurl, description, price })
     .then((result) => {
       console.log("product added");
       res.redirect("/");

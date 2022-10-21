@@ -1,7 +1,7 @@
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
-import { Model } from "sequelize-typescript";
+import { Model } from "sequelize";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -24,7 +24,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 declare global {
   namespace Express {
     interface Request extends Model {
-      user?: any;
+      user?: User;
     }
   }
 }
@@ -46,10 +46,8 @@ app.use(shopRoutes);
 app.use(get404controller);
 
 // associations area
-Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 User.hasMany(Product);
 
-Cart.belongsTo(User);
 User.hasOne(Cart);
 
 Cart.belongsToMany(Product, { through: CartItem });

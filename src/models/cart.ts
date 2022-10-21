@@ -6,10 +6,12 @@ import {
   ForeignKey,
   NonAttribute,
   DataTypes,
+  BelongsToManyGetAssociationsMixin,
 } from "sequelize";
 
 import User from "./user";
 import sequelize from "../util/database";
+import Product from "./product";
 
 class Cart extends Model<InferAttributes<Cart>, InferCreationAttributes<Cart>> {
   declare id: CreationOptional<number>;
@@ -19,6 +21,8 @@ class Cart extends Model<InferAttributes<Cart>, InferCreationAttributes<Cart>> {
 
   declare userId: ForeignKey<User["id"]>;
   declare user?: NonAttribute<User>;
+
+  declare getProducts: BelongsToManyGetAssociationsMixin<Product>;
 }
 
 Cart.init(

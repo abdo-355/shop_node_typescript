@@ -4,9 +4,14 @@ import {
   InferCreationAttributes,
   CreationOptional,
   DataTypes,
+  HasManyGetAssociationsMixin,
+  HasManyCreateAssociationMixin,
+  HasOneGetAssociationMixin,
 } from "sequelize";
 
 import sequelize from "../util/database";
+import Product from "./product";
+import Cart from "./cart";
 
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
@@ -15,6 +20,11 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
 
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
+
+  declare getProducts: HasManyGetAssociationsMixin<Product>;
+  declare createProduct: HasManyCreateAssociationMixin<Product>;
+
+  declare getCart: HasOneGetAssociationMixin<Cart>;
 }
 
 User.init(
