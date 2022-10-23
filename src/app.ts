@@ -33,7 +33,9 @@ app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     User.findByPk(1)
       .then((user) => {
-        req.user = user;
+        if (user) {
+          req.user = user;
+        }
         next();
       })
       .catch((err) => console.log(err));
@@ -58,8 +60,8 @@ Cart.belongsToMany(Product, { through: CartItem, foreignKey: "cartId" });
 Product.belongsToMany(Cart, { through: CartItem, foreignKey: "cartId" });
 
 sequelize
-  .sync({ force: true })
-  // .sync()
+  // .sync({ force: true })
+  .sync()
   .then((res) => {
     console.log(User.findByPk(1));
     return User.findByPk(1);
