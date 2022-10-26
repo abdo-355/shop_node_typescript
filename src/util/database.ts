@@ -1,17 +1,23 @@
-import { MongoClient } from "mongodb";
+import { MongoClient, Db } from "mongodb";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-const mongoConnect = (cb: Function) => {
+let _db: Db;
+
+export const mongoConnect = () => {
   MongoClient.connect(
-    `mongodb+srv://abdo:${process.env.MONGO_PASSWORD}@learningmongo.xn38cbo.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://abdo:${process.env.MONGO_PASSWORD}@learningmongo.xn38cbo.mongodb.net/LearningMongo?retryWrites=true&w=majority`
   )
     .then((client) => {
-      cb(client);
-      console.log("connected");
+      _db = client.db();
     })
     .catch((err) => console.log(err));
 };
 
-export default mongoConnect;
+export const getDb = () => {
+  if (_db) {
+    return _db;
+  }
+  console.log("No database found");
+};
