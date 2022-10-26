@@ -63,19 +63,18 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
   const updatedDescription = req.body.description;
   const updatedImg = req.body.imgUrl;
   const updatedPrice = req.body.price;
-  Product.findByPk(productId)
-    .then((product) => {
-      if (!product) {
-        return;
-      }
-      product.title = updatedTitle;
-      product.description = updatedDescription;
-      product.price = updatedPrice;
-      product.imgUrl = updatedImg;
-      return product.save();
-    })
+
+  const product = new Product(
+    updatedTitle,
+    +updatedPrice,
+    updatedImg,
+    updatedDescription,
+    productId
+  );
+
+  product
+    .save()!
     .then((result) => {
-      console.log("product updated");
       res.redirect("/admin/products");
     })
     .catch((err) => console.log(err));
