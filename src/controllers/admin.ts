@@ -36,24 +36,26 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// export const getEditProduct: RequestHandler = (req, res, next) => {
-//   const editMode = req.query.edit;
-//   if (editMode !== "true") {
-//     return res.redirect("/");
-//   }
-//   const productId = req.params.productId;
-//   Product.findByPk(productId).then((product) => {
-//     if (!product) {
-//       return res.redirect("/");
-//     }
-//     res.render(path.join("admin", "edit-product"), {
-//       pageTitle: "Edit Product",
-//       path: "/admin/edit-product",
-//       editMode,
-//       product: product,
-//     });
-//   });
-// };
+export const getEditProduct: RequestHandler = (req, res, next) => {
+  const editMode = req.query.edit;
+  if (editMode !== "true") {
+    return res.redirect("/");
+  }
+  const productId = req.params.productId;
+  Product.findById(productId)!
+    .then((product) => {
+      if (!product) {
+        return res.redirect("/");
+      }
+      res.render(path.join("admin", "edit-product"), {
+        pageTitle: "Edit Product",
+        path: "/admin/edit-product",
+        editMode,
+        product: product,
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
 // export const postEditProduct: RequestHandler = (req, res, next) => {
 //   const productId = req.body.id;
