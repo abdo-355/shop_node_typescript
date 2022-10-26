@@ -1,10 +1,12 @@
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
+import { MongoClient } from "mongodb";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import get404controller from "./controllers/404";
+import mongoConnect from "./util/database";
 
 const app = express();
 
@@ -28,8 +30,12 @@ app.use(
 );
 
 app.use("/admin", adminRoutes);
+
 app.use(shopRoutes);
 
 app.use(get404controller);
 
-app.listen(3000);
+mongoConnect((client: MongoClient) => {
+  console.log(client);
+  app.listen(3000);
+});
