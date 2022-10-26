@@ -7,7 +7,6 @@ import Cart from "../models/cart";
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.fetchAll()!
     .then((products) => {
-      console.log(products);
       res.render(path.join("shop", "product-list"), {
         prods: products,
         pageTitle: "all products",
@@ -21,16 +20,16 @@ export const getProducts: RequestHandler = (req, res, next) => {
     });
 };
 
-// export const getProduct: RequestHandler = (req, res, next) => {
-//   const productId = req.params.productId as string;
-//   Product.findByPk(productId).then((product) => {
-//     res.render(path.join("shop", "product-detail"), {
-//       product: product,
-//       pageTitle: product!.title,
-//       path: "/products",
-//     });
-//   });
-// };
+export const getProduct: RequestHandler = (req, res, next) => {
+  const productId = req.params.productId;
+  Product.findById(productId)!.then((product) => {
+    res.render(path.join("shop", "product-detail"), {
+      product: product,
+      pageTitle: product!.title,
+      path: `/products/${productId}`,
+    });
+  });
+};
 
 export const getIndex: RequestHandler = (req, res, next) => {
   Product.fetchAll()!

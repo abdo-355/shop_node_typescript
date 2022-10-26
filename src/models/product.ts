@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 import { getDb } from "../util/database";
 
 class Product {
@@ -26,6 +28,18 @@ class Product {
   public static fetchAll = () => {
     const db = getDb();
     return db?.collection("products").find().toArray();
+  };
+
+  public static findById = (productId: string) => {
+    const db = getDb();
+    return db
+      ?.collection("products")
+      .find({ _id: new ObjectId(productId) })
+      .next()
+      .then((product) => {
+        return product;
+      })
+      .catch((err) => console.log(err));
   };
 }
 

@@ -60,7 +60,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
 //   const productId = req.body.id;
 //   const updatedTitle = req.body.title;
 //   const updatedDescription = req.body.description;
-//   const updatedImg = req.body.imgurl;
+//   const updatedImg = req.body.imgUrl;
 //   const updatedPrice = req.body.price;
 //   Product.findByPk(productId)
 //     .then((product) => {
@@ -70,7 +70,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
 //       product.title = updatedTitle;
 //       product.description = updatedDescription;
 //       product.price = updatedPrice;
-//       product.imgurl = updatedImg;
+//       product.imgUrl = updatedImg;
 //       return product.save();
 //     })
 //     .then((result) => {
