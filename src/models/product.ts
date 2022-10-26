@@ -1,10 +1,10 @@
 import { getDb } from "../util/database";
 
 class Product {
-  title: string;
-  price: number;
-  imgUrl: string;
-  description: string;
+  public title: string;
+  public price: number;
+  public imgUrl: string;
+  public description: string;
 
   constructor(
     title: string,
@@ -18,10 +18,15 @@ class Product {
     this.description = description;
   }
 
-  save() {
+  public save() {
     const db = getDb();
     return db?.collection("products").insertOne(this);
   }
+
+  public static fetchAll = () => {
+    const db = getDb();
+    return db?.collection("products").find().toArray();
+  };
 }
 
 export default Product;
