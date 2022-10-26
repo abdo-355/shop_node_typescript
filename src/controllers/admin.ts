@@ -25,12 +25,13 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 };
 
 export const postAddProduct: RequestHandler = (req, res, next) => {
-  const { title, imgurl, description, price } = req.body;
+  const { title, imgUrl, description, price } = req.body;
 
-  req
-    .user!.createProduct({ title, imgurl, description, price })
-    .then((result) => {
-      console.log("product added");
+  const product = new Product(title, +price, imgUrl, description);
+
+  product
+    .save()!
+    .then(() => {
       res.redirect("/");
     })
     .catch((err) => console.log(err));
