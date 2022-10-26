@@ -57,29 +57,29 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// export const postEditProduct: RequestHandler = (req, res, next) => {
-//   const productId = req.body.id;
-//   const updatedTitle = req.body.title;
-//   const updatedDescription = req.body.description;
-//   const updatedImg = req.body.imgUrl;
-//   const updatedPrice = req.body.price;
-//   Product.findByPk(productId)
-//     .then((product) => {
-//       if (!product) {
-//         return;
-//       }
-//       product.title = updatedTitle;
-//       product.description = updatedDescription;
-//       product.price = updatedPrice;
-//       product.imgUrl = updatedImg;
-//       return product.save();
-//     })
-//     .then((result) => {
-//       console.log("product updated");
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => console.log(err));
-// };
+export const postEditProduct: RequestHandler = (req, res, next) => {
+  const productId = req.body.id;
+  const updatedTitle = req.body.title;
+  const updatedDescription = req.body.description;
+  const updatedImg = req.body.imgUrl;
+  const updatedPrice = req.body.price;
+  Product.findByPk(productId)
+    .then((product) => {
+      if (!product) {
+        return;
+      }
+      product.title = updatedTitle;
+      product.description = updatedDescription;
+      product.price = updatedPrice;
+      product.imgUrl = updatedImg;
+      return product.save();
+    })
+    .then((result) => {
+      console.log("product updated");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
+};
 
 // export const postDeleteProduct: RequestHandler = (req, res, next) => {
 //   const productId = req.body.productId;

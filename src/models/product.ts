@@ -7,22 +7,33 @@ class Product {
   public price: number;
   public imgUrl: string;
   public description: string;
+  public _id?: ObjectId;
 
   constructor(
     title: string,
     price: number,
     imgUrl: string,
-    description: string
+    description: string,
+    id?: string
   ) {
     this.title = title;
     this.price = price;
     this.imgUrl = imgUrl;
     this.description = description;
+    if (id) {
+      this._id = new ObjectId(id);
+    }
   }
 
   public save() {
     const db = getDb();
-    return db?.collection("products").insertOne(this);
+    if (this._id) {
+      return db
+        ?.collection("products")
+        .updateOne({ _id: this._id }, { $set: this });
+    } else {
+      return db?.collection("products").insertOne(this);
+    }
   }
 
   public static fetchAll = () => {
