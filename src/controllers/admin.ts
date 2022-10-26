@@ -3,18 +3,17 @@ import { RequestHandler } from "express";
 import path from "path";
 import Product from "../models/product";
 
-// export const getProducts: RequestHandler = (req, res, next) => {
-//   req
-//     .user!.getProducts()
-//     .then((products) => {
-//       res.render(path.join("admin", "products"), {
-//         prods: products,
-//         pageTitle: "Admin products",
-//         path: "/admin/products",
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// };
+export const getProducts: RequestHandler = (req, res, next) => {
+  Product.fetchAll()!
+    .then((products) => {
+      res.render(path.join("admin", "products"), {
+        prods: products,
+        pageTitle: "Admin products",
+        path: "/admin/products",
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render(path.join("admin", "edit-product"), {
