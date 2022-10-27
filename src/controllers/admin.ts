@@ -80,15 +80,13 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// export const postDeleteProduct: RequestHandler = (req, res, next) => {
-//   const productId = req.body.productId;
-//   Product.findByPk(productId)
-//     .then((product) => {
-//       return product!.destroy();
-//     })
-//     .then((result) => {
-//       console.log("produc deleted");
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => console.log(err));
-// };
+export const postDeleteProduct: RequestHandler = (req, res, next) => {
+  const productId = req.body.productId;
+
+  Product.deletebyId(productId)!
+    .then(() => {
+      console.log("deleted");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
+};
