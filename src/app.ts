@@ -20,7 +20,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 declare global {
   namespace Express {
     interface Request {
-      user?: WithId<Document>;
+      user?: User;
     }
   }
 }
@@ -30,7 +30,7 @@ app.use(
     User.findById("635aafa6bb59294f9179a0fc")!
       .then((user) => {
         if (user) {
-          req.user = user;
+          req.user = new User(user.name, user.email, user.cart, user._id);
         }
         next();
       })
