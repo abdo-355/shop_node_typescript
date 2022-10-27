@@ -25,7 +25,7 @@ class Product {
     }
   }
 
-  public save() {
+  public save = () => {
     const db = getDb();
     if (this._id) {
       return db
@@ -34,7 +34,7 @@ class Product {
     } else {
       return db?.collection("products").insertOne(this);
     }
-  }
+  };
 
   public static fetchAll = () => {
     const db = getDb();

@@ -1,48 +1,22 @@
-import {
-  Model,
-  InferAttributes,
-  InferCreationAttributes,
-  CreationOptional,
-  DataTypes,
-  HasManyGetAssociationsMixin,
-  HasManyCreateAssociationMixin,
-  HasOneGetAssociationMixin,
-  HasOneCreateAssociationMixin,
-} from "sequelize";
+import { ObjectId } from "mongodb";
 
-import sequelize from "../util/database";
-import Product from "./product";
-import Cart from "./cart";
+import { getDb } from "../util/database";
 
-class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare id: CreationOptional<number>;
-  declare name: string;
-  declare email: string;
+class User {
+  constructor(public name: string, public email: string) {
+    this.name = name;
+    this.email = email;
+  }
 
-  declare createdAt: CreationOptional<Date>;
-  declare updatedAt: CreationOptional<Date>;
+  save = () => {
+    const db = getDb();
+    return db?.collection("users").insertOne(this);
+  };
 
-  declare getProducts: HasManyGetAssociationsMixin<Product>;
-  declare createProduct: HasManyCreateAssociationMixin<Product>;
-
-  declare getCart: HasOneGetAssociationMixin<Cart>;
-  declare createCart: HasOneCreateAssociationMixin<Cart>;
+  public static findById = (userId: string) => {
+    const db = getDb();
+    return db?.collection("users").findOne({ _id: new ObjectId(userId) });
+  };
 }
-
-User.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true,
-    },
-    name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
-  },
-  { sequelize, tableName: "users" }
-);
 
 export default User;
