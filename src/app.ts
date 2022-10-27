@@ -1,6 +1,7 @@
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
+import { WithId, Document } from "mongodb";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -19,7 +20,7 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 declare global {
   namespace Express {
     interface Request {
-      user?: any;
+      user?: WithId<Document>;
     }
   }
 }
@@ -28,11 +29,12 @@ app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     User.findById("635aafa6bb59294f9179a0fc")!
       .then((user) => {
-        req.user = user;
+        if (user) {
+          req.user = user;
+        }
         next();
       })
       .catch((err) => console.log(err));
-    next();
   }
 );
 

@@ -26,7 +26,14 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const { title, imgUrl, description, price } = req.body;
 
-  const product = new Product(title, +price, imgUrl, description);
+  const product = new Product(
+    title,
+    +price,
+    imgUrl,
+    description,
+    null,
+    req.user?._id!
+  );
 
   product
     .save()!
@@ -69,7 +76,8 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
     +updatedPrice,
     updatedImg,
     updatedDescription,
-    productId
+    productId,
+    req.user?._id!
   );
 
   product

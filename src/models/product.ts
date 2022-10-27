@@ -7,6 +7,7 @@ class Product {
   public price: number;
   public imgUrl: string;
   public description: string;
+  public userId: ObjectId;
   public _id?: ObjectId;
 
   constructor(
@@ -14,12 +15,14 @@ class Product {
     price: number,
     imgUrl: string,
     description: string,
-    id?: string
+    id: string | null,
+    userId: ObjectId
   ) {
     this.title = title;
     this.price = price;
     this.imgUrl = imgUrl;
     this.description = description;
+    this.userId = userId;
     if (id) {
       this._id = new ObjectId(id);
     }
