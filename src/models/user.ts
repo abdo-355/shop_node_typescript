@@ -26,11 +26,24 @@ class User {
   };
 
   addToCart = (product: WithId<Document>) => {
-    const updatedCart = [{ productId: product._id, quantity: 1 }];
     const db = getDb();
+    let updatedCartItems = [...this.cart];
+    let newQuantity = 1;
+
+    const cartProductIndex = this.cart.findIndex(
+      (cp) => cp.productId.toString() === product._id.toString()
+    );
+
+    if (cartProductIndex >= 0) {
+      newQuantity += this.cart[cartProductIndex].quantity;
+      updatedCartItems[cartProductIndex].quantity = newQuantity;
+    } else {
+      updatedCartItems.push({ productId: product._id, quantity: 1 });
+    }
+
     return db
       ?.collection("users")
-      .updateOne({ _id: this._id }, { $set: { cart: updatedCart } });
+      .updateOne({ _id: this._id }, { $set: { cart: updatedCartItems } });
   };
 
   public static findById = (userId: string) => {
