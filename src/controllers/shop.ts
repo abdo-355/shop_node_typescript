@@ -89,6 +89,15 @@ export const postDeleteItem: RequestHandler = (req, res, next) => {
 //   });
 // };
 
+export const postOrder: RequestHandler = (req, res, next) => {
+  req.user
+    ?.addOrder()
+    ?.then((result) => {
+      res.redirect("/orders");
+    })
+    .catch((err) => console.log(err));
+};
+
 // export const getCheckout: RequestHandler = (req, res, next) => {
 //   res.render(path.join("shop", "checkout"), {
 //     path: "/checkout",
