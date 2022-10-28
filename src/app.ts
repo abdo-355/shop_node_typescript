@@ -1,15 +1,16 @@
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
-import { WithId, Document } from "mongodb";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import get404controller from "./controllers/404";
-import { mongoConnect } from "./util/database";
 import User from "./models/user";
 
 const app = express();
+dotenv.config();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -44,6 +45,11 @@ app.use(shopRoutes);
 
 app.use(get404controller);
 
-mongoConnect();
-
-app.listen(3000);
+mongoose
+  .connect(
+    `mongodb+srv://abdo:${process.env.MONGO_PASSWORD}@learningmongo.xn38cbo.mongodb.net/LearningMongo?retryWrites=true&w=majority`
+  )
+  .then((result) => {
+    app.listen(3000);
+  })
+  .catch((err) => console.log(err));
