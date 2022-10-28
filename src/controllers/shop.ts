@@ -66,8 +66,7 @@ export const postCart: RequestHandler = (req, res, next) => {
       return req.user!.addToCart(product!);
     })
     .then((result) => {
-      console.log(result);
-      res.redirect("/");
+      res.redirect("/cart");
     })
     .catch((err) => console.log(err));
 };
