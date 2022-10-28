@@ -1,6 +1,7 @@
 import { ObjectId, WithId, Document } from "mongodb";
 
 import { getDb } from "../util/database";
+import Product from "./product";
 
 interface CartItem {
   productId: ObjectId;
@@ -44,6 +45,28 @@ class User {
     return db
       ?.collection("users")
       .updateOne({ _id: this._id }, { $set: { cart: updatedCartItems } });
+  };
+
+  getCart = () => {
+    const db = getDb();
+
+    const productIds = this.cart.map((item) => item.productId);
+
+    return db
+      ?.collection("products")
+      .find({ _id: { $in: productIds } })
+      .toArray()
+      .then((products) =>
+        products.map((p) => {
+          return {
+            ...p,
+            quantity: this.cart.find(
+              (item) => item.productId.toString() === p._id.toString()
+            )?.quantity,
+          };
+        })
+      )
+      .catch((err) => console.log(err));
   };
 
   public static findById = (userId: string) => {

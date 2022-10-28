@@ -46,19 +46,18 @@ export const getIndex: RequestHandler = (req, res, next) => {
     });
 };
 
-// export const getCart: RequestHandler = (req, res, next) => {
-//   req
-//     .user!.getCart()
-//     .then((cart) => cart.getProducts())
-//     .then((products) => {
-//       res.render(path.join("shop", "cart"), {
-//         path: "/cart",
-//         pageTitle: "Your Cart",
-//         products: products,
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// };
+export const getCart: RequestHandler = (req, res, next) => {
+  req
+    .user!.getCart()!
+    .then((products) => {
+      res.render(path.join("shop", "cart"), {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: products,
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
 export const postCart: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
