@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import get404controller from "./controllers/404";
-import User from "./models/user";
+// import User from "./models/user";
 
 const app = express();
 dotenv.config();
@@ -18,26 +18,18 @@ app.set("views", "views");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: User;
-    }
-  }
-}
-
-app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    User.findById("635aafa6bb59294f9179a0fc")!
-      .then((user) => {
-        if (user) {
-          req.user = new User(user.name, user.email, user.cart, user._id);
-        }
-        next();
-      })
-      .catch((err) => console.log(err));
-  }
-);
+// app.use(
+//   (req: express.Request, res: express.Response, next: express.NextFunction) => {
+//     User.findById("635aafa6bb59294f9179a0fc")!
+//       .then((user) => {
+//         if (user) {
+//           req.user = new User(user.name, user.email, user.cart, user._id);
+//         }
+//         next();
+//       })
+//       .catch((err) => console.log(err));
+//   }
+// );
 
 app.use("/admin", adminRoutes);
 

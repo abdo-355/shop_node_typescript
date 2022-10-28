@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 interface IProduct {
   title: string;
@@ -25,6 +25,8 @@ const productSchema = new Schema<IProduct>({
     required: true,
   },
 });
+
+export default model<IProduct>("Product", productSchema);
 
 // import { ObjectId } from "mongodb";
 
