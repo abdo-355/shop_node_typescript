@@ -82,12 +82,18 @@ export const postDeleteItem: RequestHandler = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// export const getOrders: RequestHandler = (req, res, next) => {
-//   res.render("shop/orders", {
-//     path: "/orders",
-//     pageTitle: "Your Orders",
-//   });
-// };
+export const getOrders: RequestHandler = (req, res, next) => {
+  req
+    .user!.getOreders()
+    ?.then((orders) => {
+      res.render("shop/orders", {
+        path: "/orders",
+        pageTitle: "Your Orders",
+        orders: orders,
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
 export const postOrder: RequestHandler = (req, res, next) => {
   req.user
@@ -97,10 +103,3 @@ export const postOrder: RequestHandler = (req, res, next) => {
     })
     .catch((err) => console.log(err));
 };
-
-// export const getCheckout: RequestHandler = (req, res, next) => {
-//   res.render(path.join("shop", "checkout"), {
-//     path: "/checkout",
-//     pageTitle: "Checkout",
-//   });
-// };

@@ -1,7 +1,6 @@
 import { ObjectId, WithId, Document } from "mongodb";
 
 import { getDb } from "../util/database";
-import Product from "./product";
 
 interface CartItem {
   productId: ObjectId;
@@ -102,7 +101,11 @@ class User {
       });
   };
 
-  getOreders = () => {};
+  getOreders = () => {
+    const db = getDb();
+
+    return db?.collection("orders").find({ "user.id": this._id }).toArray();
+  };
 
   public static findById = (userId: string) => {
     const db = getDb();

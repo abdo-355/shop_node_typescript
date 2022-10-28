@@ -18,4 +18,6 @@ router.post("/cart-delete-item", shopController.postDeleteItem);
 
 router.post("/create-order", shopController.postOrder);
 
+router.get("/orders", shopController.getOrders);
+
 export default router;
