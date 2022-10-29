@@ -64,17 +64,15 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
   const updatedImg = req.body.imgUrl;
   const updatedPrice = req.body.price;
 
-  const product = new Product(
-    updatedTitle,
-    +updatedPrice,
-    updatedImg,
-    updatedDescription,
-    productId,
-    req.user?._id!
-  );
+  Product.findById(productId)
+    .then((product) => {
+      product!.title = updatedTitle;
+      product!.description = updatedDescription;
+      product!.imgUrl = updatedImg;
+      product!.price = updatedPrice;
 
-  product
-    .save()!
+      return product!.save();
+    })
     .then((result) => {
       res.redirect("/admin/products");
     })
