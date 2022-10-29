@@ -1,7 +1,7 @@
 import path from "path";
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";
+import mongoose, { HydratedDocument } from "mongoose";
 import dotenv from "dotenv";
 
 import adminRoutes from "./routes/admin";
@@ -21,17 +21,18 @@ app.use(express.static(path.join(__dirname, "..", "public")));
 declare global {
   namespace Express {
     export interface Request {
-      user: IUser;
+      user: HydratedDocument<IUser>;
     }
   }
 }
 
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    User.findById("635d7188357c100c5b18c8c2")!
+    User.findById("635d74c551112c2d76512228")
       .then((user) => {
+        console.log(user);
         if (user) {
-          req.user = new User(user.name, user.email, user.cart);
+          req.user = user;
         }
         next();
       })

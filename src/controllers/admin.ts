@@ -26,17 +26,18 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const { title, imgUrl, description, price } = req.body;
 
+  console.log(req.user);
+
   const product = new Product({
     title: title,
     description: description,
     imgUrl: imgUrl,
     price: +price,
+    userId: req.user,
   });
 
-  product
-    .save()
-    .then(() => res.redirect("/"))
-    .catch((err) => console.log(err));
+  product.save().then(() => res.redirect("/"));
+  // .catch((err) => console.log(err));
 };
 
 export const getEditProduct: RequestHandler = (req, res, next) => {
