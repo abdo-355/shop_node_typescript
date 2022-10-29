@@ -4,7 +4,7 @@ import path from "path";
 import Product from "../models/product";
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll()!
+  Product.find()
     .then((products) => {
       res.render(path.join("admin", "products"), {
         prods: products,
@@ -35,23 +35,18 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
 
   product
     .save()
-    .then(() => {
-      res.redirect("/");
-    })
+    .then(() => res.redirect("/"))
     .catch((err) => console.log(err));
 };
 
 export const getEditProduct: RequestHandler = (req, res, next) => {
   const editMode = req.query.edit;
   if (editMode !== "true") {
-    return res.redirect("/");
+    res.redirect("/");
   }
   const productId = req.params.productId;
-  Product.findById(productId)!
+  Product.findById(productId)
     .then((product) => {
-      if (!product) {
-        return res.redirect("/");
-      }
       res.render(path.join("admin", "edit-product"), {
         pageTitle: "Edit Product",
         path: "/admin/edit-product",
