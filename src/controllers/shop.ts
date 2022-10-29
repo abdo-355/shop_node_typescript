@@ -4,7 +4,7 @@ import path from "path";
 import Product from "../models/product";
 
 export const getProducts: RequestHandler = (req, res, next) => {
-  Product.fetchAll()!
+  Product.find()
     .then((products) => {
       res.render(path.join("shop", "product-list"), {
         prods: products,
@@ -31,7 +31,7 @@ export const getProduct: RequestHandler = (req, res, next) => {
 };
 
 export const getIndex: RequestHandler = (req, res, next) => {
-  Product.fetchAll()!
+  Product.find()
     .then((products) => {
       res.render(path.join("shop", "index"), {
         prods: products,
