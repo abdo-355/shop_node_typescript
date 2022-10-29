@@ -82,7 +82,7 @@ export const postEditProduct: RequestHandler = (req, res, next) => {
 export const postDeleteProduct: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
 
-  Product.deletebyId(productId)!
+  Product.findByIdAndRemove(productId)
     .then(() => {
       console.log("deleted");
       res.redirect("/admin/products");
