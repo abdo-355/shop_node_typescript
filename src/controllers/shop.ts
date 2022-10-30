@@ -84,7 +84,7 @@ export const postDeleteItem: RequestHandler = (req, res, next) => {
 };
 
 export const getOrders: RequestHandler = (req, res, next) => {
-  Order.find()
+  Order.find({ "user.userId": req.user._id })
     .then((orders) => {
       res.render("shop/orders", {
         path: "/orders",
