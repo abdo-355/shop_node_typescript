@@ -47,13 +47,13 @@ export const getIndex: RequestHandler = (req, res, next) => {
 };
 
 export const getCart: RequestHandler = (req, res, next) => {
-  req
-    .user!.getCart()!
-    .then((products) => {
+  req.user
+    .populate("cart.productId")
+    .then((user) => {
       res.render(path.join("shop", "cart"), {
         path: "/cart",
         pageTitle: "Your Cart",
-        products: products,
+        products: user.cart,
       });
     })
     .catch((err) => console.log(err));
