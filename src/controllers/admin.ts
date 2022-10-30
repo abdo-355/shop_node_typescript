@@ -26,8 +26,6 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 export const postAddProduct: RequestHandler = (req, res, next) => {
   const { title, imgUrl, description, price } = req.body;
 
-  console.log(req.user);
-
   const product = new Product({
     title: title,
     description: description,

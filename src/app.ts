@@ -30,7 +30,6 @@ app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     User.findById("635d74c551112c2d76512228")
       .then((user) => {
-        console.log(user);
         if (user) {
           req.user = user;
         }
