@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import path from "path";
 
 import Product from "../models/product";
+import Order from "../models/order";
 
 export const getProducts: RequestHandler = (req, res, next) => {
   Product.find()
@@ -76,16 +77,15 @@ export const postDeleteItem: RequestHandler = (req, res, next) => {
 
   req.user
     .removeFromCart(productId)
-    .then(() => {
+    .then((data: any) => {
       res.redirect("/cart");
     })
     .catch((err: Error) => console.log(err));
 };
 
 export const getOrders: RequestHandler = (req, res, next) => {
-  req
-    .user!.getOreders()
-    ?.then((orders) => {
+  Order.find()
+    .then((orders) => {
       res.render("shop/orders", {
         path: "/orders",
         pageTitle: "Your Orders",
@@ -97,8 +97,19 @@ export const getOrders: RequestHandler = (req, res, next) => {
 
 export const postOrder: RequestHandler = (req, res, next) => {
   req.user
-    ?.addOrder()
-    ?.then((result) => {
+    .populate("cart.productId")
+    .then((user) => {
+      const products = user.cart.map((item) => {
+        return { ...item.productId, quantity: item.quantity };
+      });
+      const order = new Order({
+        user: { name: req.user.name, userId: req.user._id },
+        items: products,
+      });
+
+      return order.save();
+    })
+    .then((result) => {
       res.redirect("/orders");
     })
     .catch((err) => console.log(err));
