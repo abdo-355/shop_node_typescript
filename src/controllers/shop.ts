@@ -74,12 +74,12 @@ export const postCart: RequestHandler = (req, res, next) => {
 export const postDeleteItem: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
 
-  req
-    .user!.deleteItemFromCart(productId)!
+  req.user
+    .removeFromCart(productId)
     .then(() => {
       res.redirect("/cart");
     })
-    .catch((err) => console.log(err));
+    .catch((err: Error) => console.log(err));
 };
 
 export const getOrders: RequestHandler = (req, res, next) => {

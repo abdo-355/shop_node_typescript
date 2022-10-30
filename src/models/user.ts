@@ -12,6 +12,7 @@ export interface IUser {
   email: string;
   cart: CartItem[];
   addToCart: (product: HydratedDocument<IProduct>) => any;
+  removeFromCart: (productId: string) => any;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -57,5 +58,14 @@ UserSchema.method("addToCart", function (product: HydratedDocument<IProduct>) {
 
   return this.save();
 });
+
+UserSchema.methods.removeFromCart = function (productId: string) {
+  const updatedCart = this.cart.filter(
+    (item: CartItem) => item.productId.toString() !== productId.toString()
+  );
+
+  this.cart = updatedCart;
+  return this.save();
+};
 
 export default model<IUser>("User", UserSchema);
