@@ -13,6 +13,7 @@ export interface IUser {
   cart: CartItem[];
   addToCart: (product: HydratedDocument<IProduct>) => any;
   removeFromCart: (productId: string) => any;
+  clearCart: () => any;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -65,6 +66,12 @@ UserSchema.methods.removeFromCart = function (productId: string) {
   );
 
   this.cart = updatedCart;
+  return this.save();
+};
+
+UserSchema.methods.clearCart = function () {
+  this.cart = [];
+
   return this.save();
 };
 
