@@ -1,4 +1,6 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, HydratedDocument } from "mongoose";
+
+import { IProduct } from "./product";
 
 interface CartItem {
   productId: Schema.Types.ObjectId;
@@ -9,6 +11,7 @@ export interface IUser {
   name: string;
   email: string;
   cart: CartItem[];
+  addToCart: (product: HydratedDocument<IProduct>) => any;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -33,6 +36,26 @@ const UserSchema = new Schema<IUser>({
       },
     },
   ],
+});
+
+UserSchema.method("addToCart", function (product: HydratedDocument<IProduct>) {
+  const cartProductIndex = this.cart.findIndex(
+    (p: CartItem) => p.productId.toString() === product._id.toString()
+  );
+
+  let updatedCart = [...this.cart];
+  let newQuantity = 1;
+
+  if (cartProductIndex >= 0) {
+    newQuantity += this.cart[cartProductIndex].quantity;
+    updatedCart[cartProductIndex].quantity = newQuantity;
+  } else {
+    updatedCart.push({ productId: product._id, quantity: 1 });
+  }
+
+  this.cart = updatedCart;
+
+  return this.save();
 });
 
 export default model<IUser>("User", UserSchema);

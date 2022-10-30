@@ -62,8 +62,8 @@ export const getCart: RequestHandler = (req, res, next) => {
 export const postCart: RequestHandler = (req, res, next) => {
   const productId = req.body.productId;
   Product.findById(productId)
-    ?.then((product) => {
-      return req.user!.addToCart(product!);
+    .then((product) => {
+      return req.user.addToCart(product!);
     })
     .then((result) => {
       res.redirect("/cart");
