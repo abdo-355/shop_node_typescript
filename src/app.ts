@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
+import authRoutes from "./routes/auth";
 import get404controller from "./controllers/404";
 import User, { IUser } from "./models/user";
 
@@ -42,6 +43,8 @@ app.use(
 app.use("/admin", adminRoutes);
 
 app.use(shopRoutes);
+
+app.use(authRoutes);
 
 app.use(get404controller);
 
