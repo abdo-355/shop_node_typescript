@@ -10,6 +10,7 @@ export const getProducts: RequestHandler = (req, res, next) => {
         prods: products,
         pageTitle: "Admin products",
         path: "/admin/products",
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));
@@ -20,6 +21,7 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editMode: "false",
+    isAuthenticated: req.isLoggedIn,
   });
 };
 
@@ -34,8 +36,10 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
     userId: req.user,
   });
 
-  product.save().then(() => res.redirect("/"));
-  // .catch((err) => console.log(err));
+  product
+    .save()
+    .then(() => res.redirect("/"))
+    .catch((err) => console.log(err));
 };
 
 export const getEditProduct: RequestHandler = (req, res, next) => {
@@ -51,6 +55,7 @@ export const getEditProduct: RequestHandler = (req, res, next) => {
         path: "/admin/edit-product",
         editMode,
         product: product,
+        isAuthenticated: req.isLoggedIn,
       });
     })
     .catch((err) => console.log(err));
