@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import mongoose, { HydratedDocument } from "mongoose";
 import dotenv from "dotenv";
+import session from "express-session";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -18,6 +19,13 @@ app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(
+  session({
+    secret: process.env.SECRET!,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 declare global {
   namespace Express {
