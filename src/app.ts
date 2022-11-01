@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import mongoose, { HydratedDocument } from "mongoose";
 import dotenv from "dotenv";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -13,6 +14,11 @@ import User, { IUser } from "./models/user";
 
 const app = express();
 dotenv.config();
+
+const store = MongoStore.create({
+  mongoUrl: process.env.MONGODB_URI,
+  collectionName: "sessions",
+});
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -24,6 +30,7 @@ app.use(
     secret: process.env.SECRET!,
     resave: false,
     saveUninitialized: false,
+    store: store,
   })
 );
 
@@ -57,9 +64,7 @@ app.use(authRoutes);
 app.use(get404controller);
 
 mongoose
-  .connect(
-    `mongodb+srv://abdo:${process.env.MONGO_PASSWORD}@learningmongo.xn38cbo.mongodb.net/LearningMongo?retryWrites=true&w=majority`
-  )
+  .connect(process.env.MONGODB_URI!)
   .then((result) => {
     User.findOne().then((user) => {
       if (!user) {

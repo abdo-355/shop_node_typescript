@@ -7,7 +7,6 @@ declare module "express-session" {
 }
 
 export const getLogin: RequestHandler = (req, res, next) => {
-  console.log(req.session);
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
