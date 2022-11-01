@@ -1,17 +1,21 @@
 import { RequestHandler } from "express";
 
-export const getLogin: RequestHandler = (req, res, next) => {
-  const isLoggedIn =
-    req.get("Cookie")?.split(";")[1].trim().split("=")[1] === "true";
+declare module "express-session" {
+  export interface SessionData {
+    isLoggedIn: boolean;
+  }
+}
 
+export const getLogin: RequestHandler = (req, res, next) => {
+  console.log(req.session);
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    isAuthenticated: isLoggedIn,
+    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
 export const postLogin: RequestHandler = (req, res, next) => {
-  res.setHeader("Set-Cookie", "loggedIn=true");
+  req.session.isLoggedIn = true;
   res.redirect("/");
 };
