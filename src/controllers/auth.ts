@@ -18,3 +18,12 @@ export const postLogin: RequestHandler = (req, res, next) => {
   req.session.isLoggedIn = true;
   res.redirect("/");
 };
+
+export const postLogout: RequestHandler = (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+    }
+    res.redirect("/");
+  });
+};
