@@ -19,7 +19,7 @@ export const getLogin: RequestHandler = (req, res, next) => {
 };
 
 export const postLogin: RequestHandler = (req, res, next) => {
-  User.findById("635d74c551112c2d76512228")
+  User.findById("63619223428cc889bf55f584")
     .then((user) => {
       req.session.isLoggedIn = true;
       req.session.user = user!;
