@@ -4,121 +4,127 @@ import path from "path";
 import Product from "../models/product";
 import Order from "../models/order";
 
-export const getProducts: RequestHandler = (req, res, next) => {
-  Product.find()
-    .then((products) => {
-      res.render(path.join("shop", "product-list"), {
-        prods: products,
-        pageTitle: "all products",
-        path: "/products",
-        isAuthenticated: req.session.isLoggedIn,
-      });
-    })
-    .catch((err) => {
-      if (err) {
-        console.log(err);
-      }
+export const getProducts: RequestHandler = async (req, res, next) => {
+  try {
+    const products = await Product.find();
+
+    res.render(path.join("shop", "product-list"), {
+      prods: products,
+      pageTitle: "all products",
+      path: "/products",
+      isAuthenticated: req.session.isLoggedIn,
     });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const getProduct: RequestHandler = (req, res, next) => {
-  const productId = req.params.productId;
-  Product.findById(productId)!.then((product) => {
+export const getProduct: RequestHandler = async (req, res, next) => {
+  try {
+    const productId = req.params.productId;
+
+    const product = await Product.findById(productId);
+
     res.render(path.join("shop", "product-detail"), {
       product: product,
       pageTitle: product!.title,
       path: `/products/${productId}`,
       isAuthenticated: req.session.isLoggedIn,
     });
-  });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const getIndex: RequestHandler = (req, res, next) => {
-  Product.find()
-    .then((products) => {
-      res.render(path.join("shop", "index"), {
-        prods: products,
-        pageTitle: "Shop",
-        path: "/",
-        isAuthenticated: req.session.isLoggedIn,
-      });
-    })
-    .catch((err) => {
-      if (err) {
-        console.log(err);
-      }
+export const getIndex: RequestHandler = async (req, res, next) => {
+  try {
+    const products = await Product.find();
+
+    res.render(path.join("shop", "index"), {
+      prods: products,
+      pageTitle: "Shop",
+      path: "/",
+      isAuthenticated: req.session.isLoggedIn,
     });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const getCart: RequestHandler = (req, res, next) => {
-  req.user
-    .populate("cart.productId")
-    .then((user) => {
-      res.render(path.join("shop", "cart"), {
-        path: "/cart",
-        pageTitle: "Your Cart",
-        products: user.cart,
-        isAuthenticated: req.session.isLoggedIn,
-      });
-    })
-    .catch((err) => console.log(err));
+export const getCart: RequestHandler = async (req, res, next) => {
+  try {
+    const user = await req.user.populate("cart.productId");
+
+    res.render(path.join("shop", "cart"), {
+      path: "/cart",
+      pageTitle: "Your Cart",
+      products: user.cart,
+      isAuthenticated: req.session.isLoggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const postCart: RequestHandler = (req, res, next) => {
-  const productId = req.body.productId;
-  Product.findById(productId)
-    .then((product) => {
-      return req.user!.addToCart(product!);
-    })
-    .then((result) => {
-      res.redirect("/cart");
-    })
-    .catch((err) => console.log(err));
+export const postCart: RequestHandler = async (req, res, next) => {
+  try {
+    const productId = req.body.productId;
+
+    const product = await Product.findById(productId);
+
+    await req.user.addToCart(product!);
+
+    res.redirect("/cart");
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const postDeleteItem: RequestHandler = (req, res, next) => {
-  const productId = req.body.productId;
+export const postDeleteItem: RequestHandler = async (req, res, next) => {
+  try {
+    const productId = req.body.productId;
 
-  req.user
-    .removeFromCart(productId)
-    .then((data: any) => {
-      res.redirect("/cart");
-    })
-    .catch((err: Error) => console.log(err));
+    await req.user.removeFromCart(productId);
+
+    res.redirect("/cart");
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const getOrders: RequestHandler = (req, res, next) => {
-  Order.find({ "user.userId": req.user!._id })
-    .then((orders) => {
-      res.render("shop/orders", {
-        path: "/orders",
-        pageTitle: "Your Orders",
-        orders: orders,
-        isAuthenticated: req.session.isLoggedIn,
-      });
-    })
-    .catch((err) => console.log(err));
+export const getOrders: RequestHandler = async (req, res, next) => {
+  try {
+    const orders = await Order.find({ "user.userId": req.user!._id });
+
+    res.render("shop/orders", {
+      path: "/orders",
+      pageTitle: "Your Orders",
+      orders: orders,
+      isAuthenticated: req.session.isLoggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const postOrder: RequestHandler = (req, res, next) => {
-  req.user
-    .populate("cart.productId")
-    .then((user) => {
-      const products = user.cart.map((item) => {
-        return { ...item.productId, quantity: item.quantity };
-      });
-      const order = new Order({
-        user: { name: req.user!.name, userId: req.user!._id },
-        items: products,
-      });
+export const postOrder: RequestHandler = async (req, res, next) => {
+  try {
+    const user = await req.user.populate("cart.productId");
 
-      return order.save();
-    })
-    .then((result) => {
-      return req.user!.clearCart();
-    })
-    .then((result) => {
-      res.redirect("/orders");
-    })
-    .catch((err) => console.log(err));
+    const products = user.cart.map((item) => {
+      return { ...item.productId, quantity: item.quantity };
+    });
+    const order = new Order({
+      user: { name: req.user!.name, userId: req.user!._id },
+      items: products,
+    });
+
+    await order.save();
+
+    await req.user!.clearCart();
+
+    res.redirect("/orders");
+  } catch (err) {
+    console.log(err);
+  }
 };
