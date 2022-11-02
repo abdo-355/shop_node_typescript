@@ -42,35 +42,30 @@ export const getSignup: RequestHandler = (req, res, next) => {
   });
 };
 
-export const postSignup: RequestHandler = (req, res, next) => {
-  const { name, email, password, confirmPassword } = req.body;
+export const postSignup: RequestHandler = async (req, res, next) => {
+  try {
+    const { name, email, password, confirmPassword } = req.body;
+    const userDoc = await User.findOne({ email: email });
 
-  const saveSignup = async () => {
-    try {
-      const userDoc = await User.findOne({ email: email });
-
-      if (userDoc) {
-        return res.redirect("/signup");
-      }
-
-      const hashedPassword = await bcrypt.hash(password, 12);
-
-      const user = new User({
-        name,
-        email,
-        password: hashedPassword,
-        cart: [],
-      });
-
-      await user.save();
-
-      res.redirect("/login");
-    } catch (err) {
-      console.log(err);
+    if (userDoc) {
+      return res.redirect("/signup");
     }
-  };
 
-  saveSignup();
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      cart: [],
+    });
+
+    await user.save();
+
+    res.redirect("/login");
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const postLogout: RequestHandler = (req, res, next) => {

@@ -3,17 +3,18 @@ import { RequestHandler } from "express";
 import path from "path";
 import Product from "../models/product";
 
-export const getProducts: RequestHandler = (req, res, next) => {
-  Product.find()
-    .then((products) => {
-      res.render(path.join("admin", "products"), {
-        prods: products,
-        pageTitle: "Admin products",
-        path: "/admin/products",
-        isAuthenticated: req.session.isLoggedIn,
-      });
-    })
-    .catch((err) => console.log(err));
+export const getProducts: RequestHandler = async (req, res, next) => {
+  try {
+    const products = await Product.find();
+    res.render(path.join("admin", "products"), {
+      prods: products,
+      pageTitle: "Admin products",
+      path: "/admin/products",
+      isAuthenticated: req.session.isLoggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const getAddProduct: RequestHandler = (req, res, next) => {
@@ -25,71 +26,81 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
   });
 };
 
-export const postAddProduct: RequestHandler = (req, res, next) => {
-  const { title, imgUrl, description, price } = req.body;
+export const postAddProduct: RequestHandler = async (req, res, next) => {
+  try {
+    const { title, imgUrl, description, price } = req.body;
 
-  const product = new Product({
-    title: title,
-    description: description,
-    imgUrl: imgUrl,
-    price: +price,
-    userId: req.user,
-  });
+    const product = new Product({
+      title: title,
+      description: description,
+      imgUrl: imgUrl,
+      price: +price,
+      userId: req.user,
+    });
 
-  product
-    .save()
-    .then(() => res.redirect("/"))
-    .catch((err) => console.log(err));
-};
+    await product.save();
 
-export const getEditProduct: RequestHandler = (req, res, next) => {
-  const editMode = req.query.edit;
-  if (editMode !== "true") {
     res.redirect("/");
+  } catch (err) {
+    console.log(err);
   }
-  const productId = req.params.productId;
-  Product.findById(productId)
-    .then((product) => {
-      res.render(path.join("admin", "edit-product"), {
-        pageTitle: "Edit Product",
-        path: "/admin/edit-product",
-        editMode,
-        product: product,
-        isAuthenticated: req.session.isLoggedIn,
-      });
-    })
-    .catch((err) => console.log(err));
 };
 
-export const postEditProduct: RequestHandler = (req, res, next) => {
-  const productId = req.body.id;
-  const updatedTitle = req.body.title;
-  const updatedDescription = req.body.description;
-  const updatedImg = req.body.imgUrl;
-  const updatedPrice = req.body.price;
+export const getEditProduct: RequestHandler = async (req, res, next) => {
+  try {
+    const editMode = req.query.edit;
 
-  Product.findById(productId)
-    .then((product) => {
-      product!.title = updatedTitle;
-      product!.description = updatedDescription;
-      product!.imgUrl = updatedImg;
-      product!.price = updatedPrice;
+    if (editMode !== "true") {
+      res.redirect("/");
+    }
 
-      return product!.save();
-    })
-    .then((result) => {
-      res.redirect("/admin/products");
-    })
-    .catch((err) => console.log(err));
+    const productId = req.params.productId;
+
+    const product = await Product.findById(productId);
+
+    res.render(path.join("admin", "edit-product"), {
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+      editMode,
+      product: product,
+      isAuthenticated: req.session.isLoggedIn,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
-export const postDeleteProduct: RequestHandler = (req, res, next) => {
-  const productId = req.body.productId;
+export const postEditProduct: RequestHandler = async (req, res, next) => {
+  try {
+    const productId = req.body.id;
+    const updatedTitle = req.body.title;
+    const updatedDescription = req.body.description;
+    const updatedImg = req.body.imgUrl;
+    const updatedPrice = req.body.price;
 
-  Product.findByIdAndRemove(productId)
-    .then(() => {
-      console.log("deleted");
-      res.redirect("/admin/products");
-    })
-    .catch((err) => console.log(err));
+    const product = await Product.findById(productId);
+
+    product!.title = updatedTitle;
+    product!.description = updatedDescription;
+    product!.imgUrl = updatedImg;
+    product!.price = updatedPrice;
+
+    await product!.save();
+
+    res.redirect("/admin/products");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const postDeleteProduct: RequestHandler = async (req, res, next) => {
+  try {
+    const productId = req.body.productId;
+    await Product.findByIdAndRemove(productId);
+
+    console.log("deleted");
+    res.redirect("/admin/products");
+  } catch (err) {
+    console.log(err);
+  }
 };
