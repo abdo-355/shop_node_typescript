@@ -44,7 +44,6 @@ declare global {
 
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.log(req.session.user?._id);
     if (!req.session.user) {
       return next();
     }
