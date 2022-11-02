@@ -33,6 +33,16 @@ export const postLogin: RequestHandler = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
+export const getSignup: RequestHandler = (req, res, next) => {
+  res.render("auth/signup", {
+    path: "/signup",
+    pageTitle: "Signup",
+    isAuthenticated: false,
+  });
+};
+
+export const postSignup: RequestHandler = (req, res, next) => {};
+
 export const postLogout: RequestHandler = (req, res, next) => {
   req.session.destroy((err) => {
     if (err) {
