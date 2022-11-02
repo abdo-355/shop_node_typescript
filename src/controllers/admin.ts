@@ -33,7 +33,7 @@ export const postAddProduct: RequestHandler = (req, res, next) => {
     description: description,
     imgUrl: imgUrl,
     price: +price,
-    userId: req.session.user,
+    userId: req.user,
   });
 
   product

@@ -44,11 +44,13 @@ declare global {
 
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    User.findById("635d74c551112c2d76512228")
+    console.log(req.session.user?._id);
+    if (!req.session.user) {
+      return next();
+    }
+    User.findById(req.session.user?._id)
       .then((user) => {
-        if (user) {
-          req.user = user;
-        }
+        req.user = user!;
         next();
       })
       .catch((err) => console.log(err));
