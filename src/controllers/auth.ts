@@ -19,19 +19,21 @@ export const getLogin: RequestHandler = (req, res, next) => {
   });
 };
 
-export const postLogin: RequestHandler = (req, res, next) => {
-  User.findById("63619223428cc889bf55f584")
-    .then((user) => {
-      req.session.isLoggedIn = true;
-      req.session.user = user!;
-      req.session.save((err) => {
-        if (err) {
-          console.log(err);
-        }
-        res.redirect("/");
-      });
-    })
-    .catch((err) => console.log(err));
+export const postLogin: RequestHandler = async (req, res, next) => {
+  try {
+    const user = await User.findById("63619223428cc889bf55f584");
+
+    req.session.isLoggedIn = true;
+    req.session.user = user!;
+    req.session.save((err) => {
+      if (err) {
+        console.log(err);
+      }
+      res.redirect("/");
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const getSignup: RequestHandler = (req, res, next) => {
