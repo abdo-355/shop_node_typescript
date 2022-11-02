@@ -43,16 +43,23 @@ declare global {
 }
 
 app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    if (!req.session.user) {
-      return next();
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      if (!req.session.user) {
+        return next();
+      }
+
+      const user = await User.findById(req.session.user?._id);
+
+      req.user = user!;
+      next();
+    } catch (err) {
+      console.log(err);
     }
-    User.findById(req.session.user?._id)
-      .then((user) => {
-        req.user = user!;
-        next();
-      })
-      .catch((err) => console.log(err));
   }
 );
 
@@ -64,9 +71,14 @@ app.use(authRoutes);
 
 app.use(get404controller);
 
-mongoose
-  .connect(process.env.MONGODB_URI!)
-  .then((result) => {
+const startConnection = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI!);
+
     app.listen(3000);
-  })
-  .catch((err) => console.log(err));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+startConnection();
