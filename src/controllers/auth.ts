@@ -21,16 +21,27 @@ export const getLogin: RequestHandler = (req, res, next) => {
 
 export const postLogin: RequestHandler = async (req, res, next) => {
   try {
-    const user = await User.findById("63619223428cc889bf55f584");
+    const { email, password } = req.body;
 
-    req.session.isLoggedIn = true;
-    req.session.user = user!;
-    req.session.save((err) => {
-      if (err) {
-        console.log(err);
-      }
-      res.redirect("/");
-    });
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.redirect("/login");
+    }
+
+    const doMatch = await bcrypt.compare(password, user.password);
+
+    if (doMatch) {
+      req.session.isLoggedIn = true;
+      req.session.user = user!;
+      return req.session.save((err) => {
+        if (err) {
+          console.log(err);
+        }
+        res.redirect("/");
+      });
+    }
+    res.redirect("/login");
   } catch (err) {
     console.log(err);
   }
