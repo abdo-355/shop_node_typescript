@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import { HydratedDocument } from "mongoose";
+import bcrypt from "bcryptjs";
 
 import User, { IUser } from "../models/user";
 
@@ -44,26 +45,32 @@ export const getSignup: RequestHandler = (req, res, next) => {
 export const postSignup: RequestHandler = (req, res, next) => {
   const { name, email, password, confirmPassword } = req.body;
 
-  User.findOne({ email: email })
-    .then((userDoc) => {
-      console.log(userDoc);
+  const saveSignup = async () => {
+    try {
+      const userDoc = await User.findOne({ email: email });
 
       if (userDoc) {
         return res.redirect("/signup");
       }
 
+      const hashedPassword = await bcrypt.hash(password, 12);
+
       const user = new User({
         name,
         email,
-        password,
+        password: hashedPassword,
         cart: [],
       });
 
-      return user.save().then((result) => {
-        res.redirect("/login");
-      });
-    })
-    .catch((err) => console.log(err));
+      await user.save();
+
+      res.redirect("/login");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  saveSignup();
 };
 
 export const postLogout: RequestHandler = (req, res, next) => {
