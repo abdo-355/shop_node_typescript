@@ -67,17 +67,6 @@ app.use(get404controller);
 mongoose
   .connect(process.env.MONGODB_URI!)
   .then((result) => {
-    User.findOne().then((user) => {
-      if (!user) {
-        user = new User({
-          name: "testUser",
-          email: "user@test.com",
-          cart: [],
-        });
-        user.save();
-      }
-    });
-
     app.listen(3000);
   })
   .catch((err) => console.log(err));

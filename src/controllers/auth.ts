@@ -41,7 +41,30 @@ export const getSignup: RequestHandler = (req, res, next) => {
   });
 };
 
-export const postSignup: RequestHandler = (req, res, next) => {};
+export const postSignup: RequestHandler = (req, res, next) => {
+  const { name, email, password, confirmPassword } = req.body;
+
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      console.log(userDoc);
+
+      if (userDoc) {
+        return res.redirect("/signup");
+      }
+
+      const user = new User({
+        name,
+        email,
+        password,
+        cart: [],
+      });
+
+      return user.save().then((result) => {
+        res.redirect("/login");
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
 export const postLogout: RequestHandler = (req, res, next) => {
   req.session.destroy((err) => {

@@ -10,6 +10,7 @@ interface CartItem {
 export interface IUser {
   name: string;
   email: string;
+  password: string;
   cart: CartItem[];
   addToCart: (product: HydratedDocument<IProduct>) => any;
   removeFromCart: (productId: string) => any;
@@ -22,6 +23,10 @@ const UserSchema = new Schema<IUser>({
     required: true,
   },
   email: {
+    type: String,
+    required: true,
+  },
+  password: {
     type: String,
     required: true,
   },
