@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import csurf from "csurf";
+import flash from "connect-flash";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -35,6 +36,7 @@ app.use(
   })
 );
 app.use(csrfProtection);
+app.use(flash());
 
 declare global {
   namespace Express {
