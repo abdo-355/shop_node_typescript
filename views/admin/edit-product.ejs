@@ -26,8 +26,9 @@
             </div>
             <% if (editMode === "true") { %>
                 <input type="hidden" name="id" value="<%= product._id %>">
-            <% } %>
-            <button class="btn" type="submit"><% if (editMode === "true") { %>Update Product<% } else { %>Add Product<% } %></button>
-        </form>
-    </main>
-<%- include('../partials/end.ejs') %>
+                <% } %>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+                <button class="btn" type="submit"><% if (editMode === "true") { %>Update Product<% } else { %>Add Product<% } %></button>
+            </form>
+        </main>
+        <%- include('../partials/end.ejs') %>
