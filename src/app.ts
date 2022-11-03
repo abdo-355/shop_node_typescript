@@ -5,6 +5,7 @@ import mongoose, { HydratedDocument } from "mongoose";
 import dotenv from "dotenv";
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import csurf from "csurf";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -14,11 +15,11 @@ import User, { IUser } from "./models/user";
 
 const app = express();
 dotenv.config();
-
 const store = MongoStore.create({
   mongoUrl: process.env.MONGODB_URI,
   collectionName: "sessions",
 });
+const csrfProtection = csurf();
 
 app.set("view engine", "ejs");
 app.set("views", "views");
@@ -33,6 +34,7 @@ app.use(
     store: store,
   })
 );
+app.use(csrfProtection);
 
 declare global {
   namespace Express {
