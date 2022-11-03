@@ -42,6 +42,7 @@ export const postLogin: RequestHandler = async (req, res, next) => {
         res.redirect("/");
       });
     }
+    req.flash("error", "Invalid email or password");
     res.redirect("/login");
   } catch (err) {
     console.log(err);
@@ -52,6 +53,7 @@ export const getSignup: RequestHandler = (req, res, next) => {
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "Signup",
+    errorMessage: req.flash("error"),
   });
 };
 
@@ -61,6 +63,7 @@ export const postSignup: RequestHandler = async (req, res, next) => {
     const userDoc = await User.findOne({ email: email });
 
     if (userDoc) {
+      req.flash("error", "E-mail already exists, please pick a different one");
       return res.redirect("/signup");
     }
 
