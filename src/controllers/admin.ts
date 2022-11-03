@@ -10,7 +10,6 @@ export const getProducts: RequestHandler = async (req, res, next) => {
       prods: products,
       pageTitle: "Admin products",
       path: "/admin/products",
-      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (err) {
     console.log(err);
@@ -22,7 +21,6 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editMode: "false",
-    isAuthenticated: req.session.isLoggedIn,
   });
 };
 
@@ -63,7 +61,6 @@ export const getEditProduct: RequestHandler = async (req, res, next) => {
       path: "/admin/edit-product",
       editMode,
       product: product,
-      isAuthenticated: req.session.isLoggedIn,
     });
   } catch (err) {
     console.log(err);

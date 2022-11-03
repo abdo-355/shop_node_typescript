@@ -15,7 +15,6 @@ export const getLogin: RequestHandler = (req, res, next) => {
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    isAuthenticated: false,
   });
 };
 
@@ -51,7 +50,6 @@ export const getSignup: RequestHandler = (req, res, next) => {
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "Signup",
-    isAuthenticated: false,
   });
 };
 
