@@ -1,8 +1,17 @@
 import { RequestHandler } from "express";
 import { HydratedDocument } from "mongoose";
 import bcrypt from "bcryptjs";
+import nodemailer from "nodemailer";
+import nodemailerSendgrid from "nodemailer-sendgrid";
+import dotenv from "dotenv";
 
 import User, { IUser } from "../models/user";
+
+dotenv.config();
+
+const transporter = nodemailer.createTransport(
+  nodemailerSendgrid({ apiKey: process.env.SENDGRID_API_KEY! })
+);
 
 declare module "express-session" {
   export interface SessionData {
@@ -79,6 +88,13 @@ export const postSignup: RequestHandler = async (req, res, next) => {
     await user.save();
 
     res.redirect("/login");
+
+    await transporter.sendMail({
+      to: email,
+      from: process.env.EMAIL,
+      subject: "Signup succeeded!",
+      html: "<h1>You signedup successfully!</h1><p>thanks for choosing us</p>",
+    });
   } catch (err) {
     console.log(err);
   }
