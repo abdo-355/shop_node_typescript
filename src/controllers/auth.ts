@@ -108,3 +108,11 @@ export const postLogout: RequestHandler = (req, res, next) => {
     res.redirect("/");
   });
 };
+
+export const getReset: RequestHandler = (req, res, next) => {
+  res.render("auth/reset", {
+    path: "/reset",
+    pageTitle: "Reset Password",
+    errorMessage: req.flash("error"),
+  });
+};
