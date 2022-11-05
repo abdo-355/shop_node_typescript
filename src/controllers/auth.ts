@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import nodemailer from "nodemailer";
 import nodemailerSendgrid from "nodemailer-sendgrid";
 import dotenv from "dotenv";
+import crypto from "crypto";
 
 import User, { IUser } from "../models/user";
 
@@ -114,5 +115,41 @@ export const getReset: RequestHandler = (req, res, next) => {
     path: "/reset",
     pageTitle: "Reset Password",
     errorMessage: req.flash("error"),
+  });
+};
+
+export const postReset: RequestHandler = (req, res, next) => {
+  crypto.randomBytes(32, async (err, buffer) => {
+    try {
+      if (err) {
+        console.log(err);
+        return res.redirect("/reset");
+      }
+
+      const token = buffer.toString("hex");
+
+      const user = await User.findOne({ email: req.body.email });
+
+      if (!user) {
+        req.flash("error", "this email doesn't exist");
+        return res.redirect("reset");
+      }
+
+      user.resetToken = token;
+      user.resetTokenExpiration = new Date(Date.now() + 3600000);
+      await user.save();
+
+      res.redirect("/");
+
+      transporter.sendMail({
+        to: req.body.email,
+        from: process.env.EMAIL,
+        subject: "Password reset",
+        html: `<p>you requested a password reset</p>
+        <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>`,
+      });
+    } catch (err) {
+      console.log(err);
+    }
   });
 };

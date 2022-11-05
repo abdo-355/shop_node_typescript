@@ -12,6 +12,8 @@ export interface IUser {
   email: string;
   password: string;
   cart: CartItem[];
+  resetToken?: string;
+  resetTokenExpiration?: Date;
   addToCart: (product: HydratedDocument<IProduct>) => any;
   removeFromCart: (productId: string) => any;
   clearCart: () => any;
@@ -30,6 +32,8 @@ const UserSchema = new Schema<IUser>({
     type: String,
     required: true,
   },
+  resetToken: String,
+  resetTokenExpiration: Date,
   cart: [
     {
       productId: {
