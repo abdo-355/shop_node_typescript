@@ -77,6 +77,10 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 
     const product = await Product.findById(productId);
 
+    if (req.user._id.toString() !== product?.userId.toString()) {
+      return res.redirect("/");
+    }
+
     product!.title = updatedTitle;
     product!.description = updatedDescription;
     product!.imgUrl = updatedImg;
@@ -93,7 +97,7 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 export const postDeleteProduct: RequestHandler = async (req, res, next) => {
   try {
     const productId = req.body.productId;
-    await Product.findByIdAndRemove(productId);
+    await Product.findOneAndDelete({ _id: productId, userId: req.user._id });
 
     console.log("deleted");
     res.redirect("/admin/products");
