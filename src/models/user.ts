@@ -13,7 +13,7 @@ export interface IUser {
   password: string;
   cart: CartItem[];
   resetToken?: string;
-  resetTokenExpiration?: Date;
+  resetTokenExpiration?: number;
   addToCart: (product: HydratedDocument<IProduct>) => any;
   removeFromCart: (productId: string) => any;
   clearCart: () => any;

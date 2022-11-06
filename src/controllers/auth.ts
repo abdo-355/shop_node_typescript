@@ -136,7 +136,7 @@ export const postReset: RequestHandler = (req, res, next) => {
       }
 
       user.resetToken = token;
-      user.resetTokenExpiration = new Date(Date.now() + 3600000);
+      user.resetTokenExpiration = Date.now() + 3600000;
       await user.save();
 
       res.redirect("/");
@@ -152,4 +152,24 @@ export const postReset: RequestHandler = (req, res, next) => {
       console.log(err);
     }
   });
+};
+
+export const getNewPassword: RequestHandler = async (req, res, next) => {
+  try {
+    const token = req.params.token;
+
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiration: { $gt: Date.now() },
+    });
+
+    res.render("auth/new-password", {
+      path: "/new-password",
+      pageTitle: "New Password",
+      errorMessage: req.flash("error"),
+      userId: user?._id.toString(),
+    });
+  } catch (err) {
+    console.log(err);
+  }
 };
