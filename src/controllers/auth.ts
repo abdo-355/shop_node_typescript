@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 import nodemailerSendgrid from "nodemailer-sendgrid";
 import dotenv from "dotenv";
 import crypto from "crypto";
+import { validationResult } from "express-validator";
 
 import User, { IUser } from "../models/user";
 
@@ -71,6 +72,16 @@ export const postSignup: RequestHandler = async (req, res, next) => {
   try {
     const { name, email, password, confirmPassword } = req.body;
     const userDoc = await User.findOne({ email: email });
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      console.log(errors.array());
+      return res.status(422).render("auth/signup", {
+        path: "/signup",
+        pageTitle: "Signup",
+        errorMessage: errors.array(),
+      });
+    }
 
     if (userDoc) {
       req.flash("error", "E-mail already exists, please pick a different one");

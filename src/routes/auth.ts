@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { check } from "express-validator";
 
 import * as authController from "../controllers/auth";
 
@@ -10,7 +11,7 @@ router.post("/login", authController.postLogin);
 
 router.get("/signup", authController.getSignup);
 
-router.post("/signup", authController.postSignup);
+router.post("/signup", check("email").isEmail(), authController.postSignup);
 
 router.post("/logout", authController.postLogout);
 
