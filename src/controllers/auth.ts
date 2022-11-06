@@ -70,8 +70,7 @@ export const getSignup: RequestHandler = (req, res, next) => {
 
 export const postSignup: RequestHandler = async (req, res, next) => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
-    const userDoc = await User.findOne({ email: email });
+    const { name, email, password } = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -81,11 +80,6 @@ export const postSignup: RequestHandler = async (req, res, next) => {
         pageTitle: "Signup",
         errorMessage: errors.array()[0].msg,
       });
-    }
-
-    if (userDoc) {
-      req.flash("error", "E-mail already exists, please pick a different one");
-      return res.redirect("/signup");
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
