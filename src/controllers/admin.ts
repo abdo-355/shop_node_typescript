@@ -5,7 +5,7 @@ import Product from "../models/product";
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find({ userId: req.user._id });
     res.render(path.join("admin", "products"), {
       prods: products,
       pageTitle: "Admin products",
