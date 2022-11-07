@@ -1,4 +1,5 @@
 import { RequestHandler } from "express";
+import { validationResult } from "express-validator";
 
 import path from "path";
 import Product from "../models/product";
@@ -20,13 +21,28 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
   res.render(path.join("admin", "edit-product"), {
     pageTitle: "Add Product",
     path: "/admin/add-product",
+    errorMessage: req.flash("error"),
     editMode: "false",
+    oldInput: { title: "", imgUrl: "", description: "", price: "" },
+    validationErrors: [],
   });
 };
 
 export const postAddProduct: RequestHandler = async (req, res, next) => {
   try {
     const { title, imgUrl, description, price } = req.body;
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(422).render(path.join("admin", "edit-product"), {
+        pageTitle: "Add Product",
+        path: "/admin/add-product",
+        editMode: "false",
+        errorMessage: errors.array()[0].msg,
+        oldInput: { title, imgUrl, description, price },
+        validationErrors: errors.array(),
+      });
+    }
 
     const product = new Product({
       title: title,
@@ -60,7 +76,10 @@ export const getEditProduct: RequestHandler = async (req, res, next) => {
       pageTitle: "Edit Product",
       path: "/admin/edit-product",
       editMode,
+      errorMessage: req.flash("error"),
       product: product,
+      oldInput: { title: "", imgUrl: "", description: "", price: "" },
+      validationErrors: [],
     });
   } catch (err) {
     console.log(err);
@@ -74,11 +93,29 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
     const updatedDescription = req.body.description;
     const updatedImg = req.body.imgUrl;
     const updatedPrice = req.body.price;
+    const errors = validationResult(req);
 
     const product = await Product.findById(productId);
 
     if (req.user._id.toString() !== product?.userId.toString()) {
       return res.redirect("/");
+    }
+
+    if (!errors.isEmpty()) {
+      return res.status(422).render(path.join("admin", "edit-product"), {
+        pageTitle: "Add Product",
+        path: "/admin/add-product",
+        editMode: "true",
+        errorMessage: errors.array()[0].msg,
+        product: {
+          _id: productId,
+          title: updatedTitle,
+          imgUrl: updatedImg,
+          description: updatedDescription,
+          price: updatedPrice,
+        },
+        validationErrors: errors.array(),
+      });
     }
 
     product!.title = updatedTitle;
