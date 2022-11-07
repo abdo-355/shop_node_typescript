@@ -34,6 +34,15 @@ export const postLogin: RequestHandler = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).render("auth/login", {
+        path: "/login",
+        pageTitle: "Login",
+        errorMessage: errors.array()[0].msg,
+      });
+    }
+
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -65,20 +74,31 @@ export const getSignup: RequestHandler = (req, res, next) => {
     path: "/signup",
     pageTitle: "Signup",
     errorMessage: req.flash("error"),
+    oldInput: {
+      name: "",
+      email: "",
+      password: "",
+    },
+    validationErrors: [],
   });
 };
 
 export const postSignup: RequestHandler = async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, confirmPassword } = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
-      console.log(errors.array());
       return res.status(422).render("auth/signup", {
         path: "/signup",
         pageTitle: "Signup",
         errorMessage: errors.array()[0].msg,
+        oldInput: {
+          name: name,
+          email: email,
+          password: password,
+        },
+        validationErrors: errors.array(),
       });
     }
 
