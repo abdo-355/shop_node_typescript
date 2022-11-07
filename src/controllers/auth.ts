@@ -27,6 +27,11 @@ export const getLogin: RequestHandler = (req, res, next) => {
     path: "/login",
     pageTitle: "Login",
     errorMessage: req.flash("error"),
+    oldInput: {
+      email: "",
+      password: "",
+    },
+    validationErrors: [],
   });
 };
 
@@ -35,19 +40,34 @@ export const postLogin: RequestHandler = async (req, res, next) => {
     const { email, password } = req.body;
 
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       return res.status(422).render("auth/login", {
         path: "/login",
         pageTitle: "Login",
         errorMessage: errors.array()[0].msg,
+        oldInput: {
+          email,
+          password,
+        },
+
+        validationErrors: errors.array(),
       });
     }
 
     const user = await User.findOne({ email });
 
     if (!user) {
-      req.flash("error", "Invalid email or password");
-      return res.redirect("/login");
+      return res.status(422).render("auth/login", {
+        path: "/login",
+        pageTitle: "Login",
+        errorMessage: "Invalid email or password",
+        oldInput: {
+          email,
+          password,
+        },
+        validationErrors: [],
+      });
     }
 
     const doMatch = await bcrypt.compare(password, user.password);
@@ -85,7 +105,7 @@ export const getSignup: RequestHandler = (req, res, next) => {
 
 export const postSignup: RequestHandler = async (req, res, next) => {
   try {
-    const { name, email, password, confirmPassword } = req.body;
+    const { name, email, password } = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
