@@ -11,8 +11,9 @@ import flash from "connect-flash";
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
 import authRoutes from "./routes/auth";
-import get404controller from "./controllers/404";
+import * as errorController from "./controllers/error";
 import User, { IUser } from "./models/user";
+import DataError from "./util/customError";
 
 const app = express();
 dotenv.config();
@@ -67,7 +68,8 @@ app.use(
 
       next();
     } catch (err) {
-      throw new Error(err);
+      const error = new DataError(err, 500);
+      return next(error);
     }
   }
 );
@@ -84,7 +86,20 @@ app.use(shopRoutes);
 
 app.use(authRoutes);
 
-app.use(get404controller);
+app.get("/500", errorController.get500);
+
+app.use(errorController.get404);
+
+app.use(
+  (
+    error: DataError,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    res.redirect("/500");
+  }
+);
 
 const startConnection = async () => {
   try {
