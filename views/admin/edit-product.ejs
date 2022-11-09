@@ -19,13 +19,20 @@
                 id="title" 
                 value="<% if (editMode === "true") { %><%= product.title %><% }  else { %><%= oldInput.title %><% } %>">
             </div>
-            <div class="form-control">
+            <!-- <div class="form-control">
                 <label for="imgUrl">Image URL</label>
                 <input 
                 class="<%= validationErrors.find(e => e.param === "imgUrl") ? "invalid" : "" %>" type="text" 
                 name="imgUrl" 
                 id="imgUrl" 
                 value="<% if (editMode === "true") { %><%= product.imgUrl %><% }  else { %><%= oldInput.imgUrl %><% } %>">
+            </div> -->
+            <div class="form-control">
+                <label for="image">Image</label>
+                <input 
+                type="file" 
+                name="image" 
+                id="image" >
             </div>
             <div class="form-control">
                 <label for="price">Price</label>
