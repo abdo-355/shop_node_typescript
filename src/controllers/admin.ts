@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 
 import path from "path";
 import Product from "../models/product";
+import DataError from "../util/customError";
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
@@ -13,7 +14,8 @@ export const getProducts: RequestHandler = async (req, res, next) => {
       path: "/admin/products",
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -56,7 +58,8 @@ export const postAddProduct: RequestHandler = async (req, res, next) => {
 
     res.redirect("/");
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -82,7 +85,8 @@ export const getEditProduct: RequestHandler = async (req, res, next) => {
       validationErrors: [],
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -127,7 +131,8 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 
     res.redirect("/admin/products");
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -139,6 +144,7 @@ export const postDeleteProduct: RequestHandler = async (req, res, next) => {
     console.log("deleted");
     res.redirect("/admin/products");
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };

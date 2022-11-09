@@ -8,6 +8,7 @@ import crypto from "crypto";
 import { validationResult } from "express-validator";
 
 import User, { IUser } from "../models/user";
+import DataError from "../util/customError";
 
 dotenv.config();
 
@@ -85,7 +86,8 @@ export const postLogin: RequestHandler = async (req, res, next) => {
     req.flash("error", "Invalid email or password");
     res.redirect("/login");
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -142,7 +144,8 @@ export const postSignup: RequestHandler = async (req, res, next) => {
       html: "<h1>You signedup successfully!</h1><p>thanks for choosing us</p>",
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -194,7 +197,8 @@ export const postReset: RequestHandler = (req, res, next) => {
         <p>Click this <a href="http://localhost:3000/reset/${token}">link</a> to set a new password</p>`,
       });
     } catch (err) {
-      console.log(err);
+      const error = new DataError(err, 500);
+      return next(error);
     }
   });
 };
@@ -216,7 +220,8 @@ export const getNewPassword: RequestHandler = async (req, res, next) => {
       passwordToken: token,
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -242,6 +247,7 @@ export const postNewPassword: RequestHandler = async (req, res, next) => {
 
     res.redirect("/login");
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };

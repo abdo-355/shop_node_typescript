@@ -3,6 +3,7 @@ import path from "path";
 
 import Product from "../models/product";
 import Order from "../models/order";
+import DataError from "../util/customError";
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
@@ -14,7 +15,8 @@ export const getProducts: RequestHandler = async (req, res, next) => {
       path: "/products",
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -30,7 +32,8 @@ export const getProduct: RequestHandler = async (req, res, next) => {
       path: `/products/${productId}`,
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -44,7 +47,8 @@ export const getIndex: RequestHandler = async (req, res, next) => {
       path: "/",
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -58,7 +62,8 @@ export const getCart: RequestHandler = async (req, res, next) => {
       products: user.cart,
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -72,7 +77,8 @@ export const postCart: RequestHandler = async (req, res, next) => {
 
     res.redirect("/cart");
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -84,7 +90,8 @@ export const postDeleteItem: RequestHandler = async (req, res, next) => {
 
     res.redirect("/cart");
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -98,7 +105,8 @@ export const getOrders: RequestHandler = async (req, res, next) => {
       orders: orders,
     });
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };
 
@@ -120,6 +128,7 @@ export const postOrder: RequestHandler = async (req, res, next) => {
 
     res.redirect("/orders");
   } catch (err) {
-    console.log(err);
+    const error = new DataError(err, 500);
+    return next(error);
   }
 };

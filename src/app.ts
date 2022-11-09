@@ -59,10 +59,15 @@ app.use(
 
       const user = await User.findById(req.session.user?._id);
 
-      req.user = user!;
+      if (!user) {
+        return next();
+      }
+
+      req.user = user;
+
       next();
     } catch (err) {
-      console.log(err);
+      throw new Error(err);
     }
   }
 );
