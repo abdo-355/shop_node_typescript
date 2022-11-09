@@ -7,6 +7,7 @@ import session from "express-session";
 import MongoStore from "connect-mongo";
 import csurf from "csurf";
 import flash from "connect-flash";
+import multer from "multer";
 
 import adminRoutes from "./routes/admin";
 import shopRoutes from "./routes/shop";
@@ -27,6 +28,7 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(multer({ dest: "images" }).single("image"));
 app.use(express.static(path.join(__dirname, "..", "public")));
 app.use(
   session({
