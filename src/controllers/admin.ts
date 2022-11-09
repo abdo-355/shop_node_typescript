@@ -32,7 +32,7 @@ export const getAddProduct: RequestHandler = (req, res, next) => {
 
 export const postAddProduct: RequestHandler = async (req, res, next) => {
   try {
-    const { title, imgUrl, description, price } = req.body;
+    const { title, image, description, price } = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -41,7 +41,7 @@ export const postAddProduct: RequestHandler = async (req, res, next) => {
         path: "/admin/add-product",
         editMode: "false",
         errorMessage: errors.array()[0].msg,
-        oldInput: { title, imgUrl, description, price },
+        oldInput: { title, image, description, price },
         validationErrors: errors.array(),
       });
     }
@@ -49,7 +49,7 @@ export const postAddProduct: RequestHandler = async (req, res, next) => {
     const product = new Product({
       title: title,
       description: description,
-      imgUrl: imgUrl,
+      imgUrl: image,
       price: +price,
       userId: req.user,
     });

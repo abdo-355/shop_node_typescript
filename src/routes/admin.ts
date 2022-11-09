@@ -18,7 +18,6 @@ router.post(
       .isLength({ min: 3 })
       .trim()
       .withMessage("Please enter a valid title"),
-    body("imgUrl").isURL().withMessage("Please enter a valid image URL"),
     body("price").isFloat().withMessage("Please enter a valid price"),
     body("description")
       .isLength({ min: 5, max: 400 })
@@ -39,7 +38,6 @@ router.post(
       .isLength({ min: 3 })
       .trim()
       .withMessage("Please enter a valid title"),
-    body("imgUrl").isURL().withMessage("Please enter a valid image URL"),
     body("price").isFloat().withMessage("Please enter a valid price"),
     body("description")
       .isLength({ min: 5, max: 400 })
