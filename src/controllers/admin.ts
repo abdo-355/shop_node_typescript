@@ -47,6 +47,8 @@ export const postAddProduct: RequestHandler = async (req, res, next) => {
       });
     }
 
+    const imgUrl = image.path;
+
     if (!errors.isEmpty()) {
       return res.status(422).render(path.join("admin", "edit-product"), {
         pageTitle: "Add Product",
@@ -61,7 +63,7 @@ export const postAddProduct: RequestHandler = async (req, res, next) => {
     const product = new Product({
       title: title,
       description: description,
-      imgUrl: image,
+      imgUrl: imgUrl,
       price: +price,
       userId: req.user,
     });
@@ -107,8 +109,8 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
     const productId = req.body.id;
     const updatedTitle = req.body.title;
     const updatedDescription = req.body.description;
-    const updatedImg = req.body.imgUrl;
     const updatedPrice = req.body.price;
+    const image = req.file;
     const errors = validationResult(req);
 
     const product = await Product.findById(productId);
@@ -126,7 +128,6 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
         product: {
           _id: productId,
           title: updatedTitle,
-          imgUrl: updatedImg,
           description: updatedDescription,
           price: updatedPrice,
         },
@@ -136,7 +137,9 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 
     product!.title = updatedTitle;
     product!.description = updatedDescription;
-    product!.imgUrl = updatedImg;
+    if (image) {
+      product!.imgUrl = image.path;
+    }
     product!.price = updatedPrice;
 
     await product!.save();
