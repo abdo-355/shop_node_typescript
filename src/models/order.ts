@@ -9,7 +9,7 @@ interface OrderItem extends IProduct {
 export interface IOrder {
   items: OrderItem[];
   user: {
-    id: Schema.Types.ObjectId;
+    userId: Schema.Types.ObjectId;
     name: string;
   };
 }

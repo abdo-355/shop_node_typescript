@@ -134,14 +134,31 @@ export const postOrder: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const getInvoice: RequestHandler = (req, res, next) => {
-  const orderId = req.params.orderId;
-  const invoiceName = "invoice-" + orderId + ".pdf";
-  const invoicePath = path.join("invoices", invoiceName);
-  fs.readFile(invoicePath, (err, data) => {
-    if (err) {
-      return next(err);
+export const getInvoice: RequestHandler = async (req, res, next) => {
+  try {
+    const orderId = req.params.orderId;
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return next(new Error("No order found"));
     }
-    res.send(data);
-  });
+
+    if (order.user.userId.toString() !== req.user._id.toString()) {
+      return next(new Error("Unauthorised"));
+    }
+
+    const invoiceName = "invoice-" + orderId + ".pdf";
+    const invoicePath = path.join("invoices", invoiceName);
+    fs.readFile(invoicePath, (err, data) => {
+      if (err) {
+        return next(err);
+      }
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `inline; filename="${invoiceName}"`);
+      res.send(data);
+    });
+  } catch (err) {
+    next(err);
+  }
 };
