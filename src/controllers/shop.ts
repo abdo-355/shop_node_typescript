@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import path from "path";
+import fs from "fs";
 
 import Product from "../models/product";
 import Order from "../models/order";
@@ -131,4 +132,16 @@ export const postOrder: RequestHandler = async (req, res, next) => {
     const error = new DataError(err, 500);
     return next(error);
   }
+};
+
+export const getInvoice: RequestHandler = (req, res, next) => {
+  const orderId = req.params.orderId;
+  const invoiceName = "invoice-" + orderId + ".pdf";
+  const invoicePath = path.join("invoices", invoiceName);
+  fs.readFile(invoicePath, (err, data) => {
+    if (err) {
+      return next(err);
+    }
+    res.send(data);
+  });
 };
