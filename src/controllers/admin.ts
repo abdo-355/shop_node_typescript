@@ -34,8 +34,18 @@ export const postAddProduct: RequestHandler = async (req, res, next) => {
   try {
     const { title, description, price } = req.body;
     const image = req.file;
-    console.log(image);
     const errors = validationResult(req);
+
+    if (!image) {
+      return res.status(422).render(path.join("admin", "edit-product"), {
+        pageTitle: "Add Product",
+        path: "/admin/add-product",
+        editMode: "false",
+        errorMessage: "Attached file is not an image",
+        oldInput: { title, description, price },
+        validationErrors: [],
+      });
+    }
 
     if (!errors.isEmpty()) {
       return res.status(422).render(path.join("admin", "edit-product"), {
@@ -43,7 +53,7 @@ export const postAddProduct: RequestHandler = async (req, res, next) => {
         path: "/admin/add-product",
         editMode: "false",
         errorMessage: errors.array()[0].msg,
-        oldInput: { title, imgUrl: image, description, price },
+        oldInput: { title, description, price },
         validationErrors: errors.array(),
       });
     }
