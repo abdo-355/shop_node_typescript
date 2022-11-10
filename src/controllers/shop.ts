@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import path from "path";
 import fs from "fs";
+import PDFDocument from "pdfkit";
 
 import Product from "../models/product";
 import Order from "../models/order";
@@ -151,12 +152,17 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
     const invoiceName = "invoice-" + orderId + ".pdf";
     const invoicePath = path.join("invoices", invoiceName);
 
-    const file = fs.createReadStream(invoicePath);
+    const pdfDoc = new PDFDocument();
 
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attach; filename="${invoiceName}"`);
+    res.setHeader("Content-Disposition", `inline; filename="${invoiceName}"`);
 
-    file.pipe(res);
+    pdfDoc.pipe(fs.createWriteStream(invoicePath));
+    pdfDoc.pipe(res);
+
+    pdfDoc.text("hello world");
+
+    pdfDoc.end();
   } catch (err) {
     next(err);
   }
