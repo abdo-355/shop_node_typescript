@@ -140,6 +140,7 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
     const orderId = req.params.orderId;
 
     const order = await Order.findById(orderId);
+    let totalPrice = 0;
 
     if (!order) {
       return next(new Error("No order found"));
@@ -160,7 +161,19 @@ export const getInvoice: RequestHandler = async (req, res, next) => {
     pdfDoc.pipe(fs.createWriteStream(invoicePath));
     pdfDoc.pipe(res);
 
-    pdfDoc.text("hello world");
+    pdfDoc.fontSize(26).text("invoice");
+    pdfDoc.text("----------------------------------");
+
+    order.items.forEach((product) => {
+      totalPrice += product.quantity * product.price;
+      pdfDoc
+        .fontSize(16)
+        .text(`${product.title} - ${product.quantity} x $${product.price}`);
+    });
+
+    pdfDoc.fontSize(20).text("----------");
+
+    pdfDoc.fontSize(16).text(`Total price: $${totalPrice.toFixed(2)}`);
 
     pdfDoc.end();
   } catch (err) {
