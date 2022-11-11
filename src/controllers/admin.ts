@@ -1,9 +1,10 @@
 import { RequestHandler } from "express";
 import { validationResult } from "express-validator";
-
 import path from "path";
+
 import Product from "../models/product";
 import DataError from "../util/customError";
+import { deleteFile } from "../util/file";
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
@@ -138,6 +139,7 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
     product!.title = updatedTitle;
     product!.description = updatedDescription;
     if (image) {
+      deleteFile(product.imgUrl);
       product!.imgUrl = image.path;
     }
     product!.price = updatedPrice;
@@ -154,6 +156,15 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
 export const postDeleteProduct: RequestHandler = async (req, res, next) => {
   try {
     const productId = req.body.productId;
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return next(new Error("Product not found"));
+    }
+
+    deleteFile(product.imgUrl);
+
     await Product.findOneAndDelete({ _id: productId, userId: req.user._id });
 
     console.log("deleted");
