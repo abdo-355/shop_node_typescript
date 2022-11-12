@@ -7,16 +7,28 @@ import Product from "../models/product";
 import Order from "../models/order";
 import DataError from "../util/customError";
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 1;
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const page = +req.query.page! || 1;
+
+    const totalItems = await Product.find().countDocuments();
+
+    const products = await Product.find()
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE);
 
     res.render(path.join("shop", "product-list"), {
       prods: products,
-      pageTitle: "all products",
+      pageTitle: "Products",
       path: "/products",
+      currentPage: page,
+      hasNextPage: page * ITEMS_PER_PAGE < totalItems,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
     });
   } catch (err) {
     const error = new DataError(err, 500);
