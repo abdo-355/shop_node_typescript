@@ -7,6 +7,8 @@ import Product from "../models/product";
 import Order from "../models/order";
 import DataError from "../util/customError";
 
+const ITEMS_PER_PAGE = 2;
+
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
     const products = await Product.find();
@@ -41,7 +43,11 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 
 export const getIndex: RequestHandler = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const page = req.query.page;
+
+    const products = await Product.find()
+      .skip((+page! - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE);
 
     res.render(path.join("shop", "index"), {
       prods: products,
