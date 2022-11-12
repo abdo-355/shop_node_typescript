@@ -43,16 +43,24 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 
 export const getIndex: RequestHandler = async (req, res, next) => {
   try {
-    const page = req.query.page;
+    const page = +req.query.page!;
+
+    const totalItems = await Product.find().countDocuments();
 
     const products = await Product.find()
-      .skip((+page! - 1) * ITEMS_PER_PAGE)
+      .skip((page - 1) * ITEMS_PER_PAGE)
       .limit(ITEMS_PER_PAGE);
 
     res.render(path.join("shop", "index"), {
       prods: products,
       pageTitle: "Shop",
       path: "/",
+      totalProducts: totalItems,
+      hasNextPage: page * ITEMS_PER_PAGE < totalItems,
+      hasPreviousPage: page > 1,
+      nextPage: page + 1,
+      previousPage: page - 1,
+      lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
     });
   } catch (err) {
     const error = new DataError(err, 500);
