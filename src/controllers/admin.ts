@@ -153,9 +153,9 @@ export const postEditProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const postDeleteProduct: RequestHandler = async (req, res, next) => {
+export const deleteProduct: RequestHandler = async (req, res, next) => {
   try {
-    const productId = req.body.productId;
+    const productId = req.params.productId;
 
     const product = await Product.findById(productId);
 
@@ -168,9 +168,8 @@ export const postDeleteProduct: RequestHandler = async (req, res, next) => {
     await Product.findOneAndDelete({ _id: productId, userId: req.user._id });
 
     console.log("deleted");
-    res.redirect("/admin/products");
+    res.status(200).json({ message: "Success!" });
   } catch (err) {
-    const error = new DataError(err, 500);
-    return next(error);
+    res.status(500).json({ message: "Deleting product failed" });
   }
 };
