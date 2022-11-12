@@ -43,7 +43,7 @@ export const getProduct: RequestHandler = async (req, res, next) => {
 
 export const getIndex: RequestHandler = async (req, res, next) => {
   try {
-    const page = +req.query.page!;
+    const page = +req.query.page! || 1;
 
     const totalItems = await Product.find().countDocuments();
 
@@ -55,7 +55,7 @@ export const getIndex: RequestHandler = async (req, res, next) => {
       prods: products,
       pageTitle: "Shop",
       path: "/",
-      totalProducts: totalItems,
+      currentPage: page,
       hasNextPage: page * ITEMS_PER_PAGE < totalItems,
       hasPreviousPage: page > 1,
       nextPage: page + 1,
