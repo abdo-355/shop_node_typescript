@@ -123,6 +123,30 @@ export const postDeleteItem: RequestHandler = async (req, res, next) => {
   }
 };
 
+export const getCheckout: RequestHandler = async (req, res, next) => {
+  try {
+    const user = await req.user.populate("cart.productId");
+
+    const products = user.cart;
+
+    let totalPrice = 0;
+
+    products.forEach((e) => {
+      // @ts-ignore
+      totalPrice += e.quantity * e.productId.price;
+    });
+
+    res.render("shop/checkout", {
+      path: "/checkout",
+      pageTitle: "Checkout",
+      products: products,
+      totalPrice: totalPrice,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const getOrders: RequestHandler = async (req, res, next) => {
   try {
     const orders = await Order.find({ "user.userId": req.user!._id });
