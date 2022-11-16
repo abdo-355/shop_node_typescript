@@ -2,12 +2,18 @@ import { RequestHandler } from "express";
 import path from "path";
 import fs from "fs";
 import PDFDocument from "pdfkit";
+import dotenv from "dotenv";
 
-import Product from "../models/product";
+import Product, { IProduct } from "../models/product";
 import Order from "../models/order";
 import DataError from "../util/customError";
+import Stripe from "stripe";
 
 const ITEMS_PER_PAGE = 1;
+dotenv.config();
+const stripe = new Stripe(process.env.STRIPE_KEY!, {
+  apiVersion: "2022-08-01",
+});
 
 export const getProducts: RequestHandler = async (req, res, next) => {
   try {
@@ -125,23 +131,48 @@ export const postDeleteItem: RequestHandler = async (req, res, next) => {
 
 export const getCheckout: RequestHandler = async (req, res, next) => {
   try {
-    const user = await req.user.populate("cart.productId");
+    const user = await req.user.populate<{
+      cart: { productId: IProduct; quantity: number }[];
+    }>("cart.productId");
 
     const products = user.cart;
-
     let totalPrice = 0;
 
     products.forEach((e) => {
-      // @ts-ignore
       totalPrice += e.quantity * e.productId.price;
     });
 
-    res.render("shop/checkout", {
-      path: "/checkout",
-      pageTitle: "Checkout",
-      products: products,
-      totalPrice: totalPrice,
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: products.map((product) => {
+        const p = product.productId;
+
+        return {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: p.title,
+              description: p.description,
+            },
+            unit_amount: Math.round(p.price * 100),
+          },
+          quantity: product.quantity,
+        };
+      }),
+      mode: "payment",
+      success_url: `${req.protocol}://${req.get("host")}/checkout/success`,
+      cancel_url: `${req.protocol}://${req.get("host")}/checkout/cancel`,
     });
+    res.status(303).redirect(session.url!);
+
+    // res.render("shop/checkout", {
+    //   path: "/checkout",
+    //   pageTitle: "Checkout",
+    //   products: products,
+    //   totalPrice: totalPrice,
+    //   key: process.env.STRIPE_KEY,
+    //   sessionId: session.id,
+    // });
   } catch (err) {
     next(err);
   }

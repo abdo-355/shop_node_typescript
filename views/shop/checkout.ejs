@@ -22,6 +22,11 @@
                         Total: $<%= totalPrice %>
                     </h2>
                 </div>
+                <div class="centered">
+                    <form action="/checkout" method="get">
+                        <button id="order-btn" class="btn" type="submit">Order</button>
+                    </form>
+                </div>
             </main>
 
             <%- include('../partials/end.ejs') %>
